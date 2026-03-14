@@ -8,14 +8,7 @@ import type {
   TypedStreamEvent,
 } from "@/types/shared";
 import { readSSEStream } from "@/lib/streamHandler";
-
-// フェーズラベル (product-design.md Section 2.3 aligned)
-const PHASE_LABELS: Record<AnalysisPhase, string> = {
-  1: "データを読み込み中...",
-  2: "表の顔を分析中...",
-  3: "裏の顔を探索中...",
-  4: "ギャップスコアを計算中...",
-};
+import { PHASE_LABELS } from "@/lib/constants";
 
 // フェーズの時間設定 (秒)
 const PHASE_TIMINGS: { phase: AnalysisPhase; at: number }[] = [
