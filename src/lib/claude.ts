@@ -13,7 +13,7 @@ const anthropic = new Anthropic({
 });
 
 /** 使用モデル */
-const MODEL = "claude-sonnet-4-6" as const;
+const MODEL = "claude-haiku-4-5-20251001" as const;
 
 /** APIパラメータ */
 const TEMPERATURE = 0.8;

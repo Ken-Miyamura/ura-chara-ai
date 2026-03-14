@@ -76,12 +76,13 @@ export function parseAnalysisResponse(
   id: string,
   analyzedAt: string
 ): AnalysisResult {
-  // tool_use ブロックを探す
-  const toolUseBlock = response.content.find(
+  // tool_use ブロックを全て取得し、inputをマージ
+  // Haikuは surface/hidden/gap/shareCard を別々の tool_use ブロックで返すことがある
+  const toolUseBlocks = response.content.filter(
     (block) => block.type === "tool_use"
   );
 
-  if (!toolUseBlock) {
+  if (toolUseBlocks.length === 0) {
     throw new AnalysisParseError(
       "Claude APIレスポンスにtool_useブロックが見つかりません。",
       "content",
@@ -89,16 +90,14 @@ export function parseAnalysisResponse(
     );
   }
 
-  const rawInput = toolUseBlock.input;
-  if (!rawInput || typeof rawInput !== "object") {
-    throw new AnalysisParseError(
-      "tool_useブロックのinputが不正です。",
-      "input",
-      rawInput
-    );
+  // 全 tool_use ブロックの input をマージ
+  const data: Record<string, unknown> = {};
+  for (const block of toolUseBlocks) {
+    const rawInput = block.input;
+    if (rawInput && typeof rawInput === "object") {
+      Object.assign(data, rawInput as Record<string, unknown>);
+    }
   }
-
-  const data = rawInput as Record<string, unknown>;
 
   // 各セクションの解析・バリデーション
   const surface = parseSurfacePersona(data["surface"]);

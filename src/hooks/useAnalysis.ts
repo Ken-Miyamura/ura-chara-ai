@@ -113,30 +113,30 @@ export function useAnalysis(): UseAnalysisReturn {
         }
 
         // SSEストリーム処理 (readSSEStream で TypedStreamEvent を正しくパース)
-        let analysisComplete = false;
+        let analysisHandled = false;
 
         await readSSEStream(response, (typed: TypedStreamEvent) => {
+          if (analysisHandled) return;
           const event = typed.data;
 
           if (event.status === "complete" && event.result) {
-            // フェーズタイマー停止
+            analysisHandled = true;
             if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
             setResult(event.result);
             setStatus("complete");
-            analysisComplete = true;
             return;
           }
 
           if (event.status === "error") {
-            // フェーズタイマー停止
+            analysisHandled = true;
             if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
             setError(event.error || "分析中にエラーが発生しました");
             setStatus("error");
           }
         });
 
-        // ストリーム完了したが結果が取得できなかった場合
-        if (!analysisComplete) {
+        // ストリーム完了したが結果もエラーも取得できなかった場合
+        if (!analysisHandled) {
           throw new Error("分析結果が見つかりませんでした。もう一度お試しください。");
         }
       } catch (err) {

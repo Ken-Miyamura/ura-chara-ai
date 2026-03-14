@@ -27,7 +27,7 @@ export default function TraitComparisonList({
 
       <div className="space-y-5">
         {comparisons.map((comparison, index) => (
-          <div key={comparison.category} className="space-y-1">
+          <div key={`${comparison.category}-${index}`} className="space-y-1">
             <TraitBar
               icon={comparison.icon}
               label={comparison.category}

@@ -97,8 +97,10 @@ export function createSSEStream(): {
     },
   });
 
+  let closed = false;
+
   function enqueue(text: string): void {
-    if (controller) {
+    if (controller && !closed) {
       controller.enqueue(encoder.encode(text));
     }
   }
@@ -117,7 +119,8 @@ export function createSSEStream(): {
       enqueue(createErrorEvent(error));
     },
     close(): void {
-      if (controller) {
+      if (controller && !closed) {
+        closed = true;
         controller.close();
       }
     },
