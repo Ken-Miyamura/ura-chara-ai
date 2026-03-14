@@ -32,10 +32,11 @@ export default function InputStep({
   onChipToggle,
 }: InputStepProps) {
   const charCount = value.length;
+  const trimmedCharCount = value.trim().length;
   const isValid =
-    (!config.required || charCount >= config.minChars) &&
+    (!config.required || trimmedCharCount >= config.minChars) &&
     charCount <= config.maxChars;
-  const canProceed = config.required ? charCount >= config.minChars && charCount <= config.maxChars : true;
+  const canProceed = config.required ? trimmedCharCount >= config.minChars && charCount <= config.maxChars : true;
 
   return (
     <motion.div
