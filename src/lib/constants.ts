@@ -212,7 +212,7 @@ export const TRAIT_AXES = [
 
 export const API_CONFIG = {
   /** Claude API タイムアウト（ミリ秒） */
-  claudeTimeoutMs: 30_000,
+  claudeTimeoutMs: 60_000,
   /** Claude モデル（メイン分析用） */
   claudeModel: "claude-sonnet-4-6" as const,
   /** Claude 最大トークン数 */
