@@ -226,7 +226,7 @@ export const API_CONFIG = {
   /** Claude API タイムアウト（ミリ秒） */
   claudeTimeoutMs: 30_000,
   /** Claude モデル（メイン分析用） */
-  claudeModel: "claude-haiku-4-5-20251001" as const,
+  claudeModel: "claude-sonnet-4-6" as const,
   /** Claude 最大トークン数 */
   claudeMaxTokens: 4096,
   /** Claude Temperature */
