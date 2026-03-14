@@ -2,11 +2,11 @@
 // See: docs/technical-architecture.md Section 4
 
 import Anthropic from "@anthropic-ai/sdk";
-import type { UserInput, AnalysisResult } from "@/types/shared";
-import { SYSTEM_PROMPT } from "@/prompts/system";
-import { buildAnalysisPrompt, ANALYSIS_RESULT_TOOL_SCHEMA } from "@/prompts/analysis";
-import { parseAnalysisResponse } from "@/lib/parseAnalysis";
 import { API_CONFIG } from "@/lib/constants";
+import { parseAnalysisResponse } from "@/lib/parseAnalysis";
+import { ANALYSIS_RESULT_TOOL_SCHEMA, buildAnalysisPrompt } from "@/prompts/analysis";
+import { SYSTEM_PROMPT } from "@/prompts/system";
+import type { AnalysisResult, UserInput } from "@/types/shared";
 
 /** Claude APIクライアント（サーバーサイドのみ） */
 const anthropic = new Anthropic({
@@ -29,9 +29,7 @@ const MAX_TOKENS = API_CONFIG.claudeMaxTokens;
  * @returns 完全なAnalysisResult（ID・タイムスタンプ付き）
  * @throws Error - API呼び出しまたはレスポンス解析に失敗した場合
  */
-export async function analyzePersona(
-  input: UserInput
-): Promise<AnalysisResult> {
+export async function analyzePersona(input: UserInput): Promise<AnalysisResult> {
   const userPrompt = buildAnalysisPrompt(input);
 
   // クライアントサイドUUID生成
@@ -40,12 +38,9 @@ export async function analyzePersona(
 
   // タイムアウト用AbortController
   const abortController = new AbortController();
-  const timeoutId = setTimeout(
-    () => abortController.abort(),
-    API_CONFIG.claudeTimeoutMs
-  );
+  const timeoutId = setTimeout(() => abortController.abort(), API_CONFIG.claudeTimeoutMs);
 
-  let response;
+  let response: Anthropic.Message;
   try {
     response = await anthropic.messages.create(
       {
@@ -65,7 +60,7 @@ export async function analyzePersona(
           name: ANALYSIS_RESULT_TOOL_SCHEMA.name,
         },
       },
-      { signal: abortController.signal }
+      { signal: abortController.signal },
     );
   } catch (err) {
     if (err instanceof Error && err.name === "AbortError") {

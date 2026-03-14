@@ -39,9 +39,7 @@ export default function PersonaCard({
       <div className="mb-3">
         <span
           className={`text-xs font-medium px-2 py-1 rounded-full ${
-            isSurface
-              ? "bg-amber-200/50 text-amber-700"
-              : "bg-purple-500/20 text-purple-300"
+            isSurface ? "bg-amber-200/50 text-amber-700" : "bg-purple-500/20 text-purple-300"
           }`}
         >
           {isSurface ? "表の顔" : "裏の顔"}
@@ -58,20 +56,14 @@ export default function PersonaCard({
         >
           {emoji}
         </motion.div>
-        <h3
-          className={`text-lg font-bold ${
-            isSurface ? "text-zinc-800" : "text-white"
-          }`}
-        >
+        <h3 className={`text-lg font-bold ${isSurface ? "text-zinc-800" : "text-white"}`}>
           {title}
         </h3>
       </div>
 
       {/* サマリー */}
       <p
-        className={`text-sm leading-relaxed mb-4 ${
-          isSurface ? "text-zinc-600" : "text-zinc-300"
-        }`}
+        className={`text-sm leading-relaxed mb-4 ${isSurface ? "text-zinc-600" : "text-zinc-300"}`}
       >
         {summary}
       </p>
@@ -82,9 +74,7 @@ export default function PersonaCard({
           <span
             key={`${trait}-${i}`}
             className={`text-xs px-2 py-0.5 rounded-full ${
-              isSurface
-                ? "bg-amber-100 text-amber-700"
-                : "bg-purple-500/20 text-purple-300"
+              isSurface ? "bg-amber-100 text-amber-700" : "bg-purple-500/20 text-purple-300"
             }`}
           >
             {trait}
@@ -97,9 +87,7 @@ export default function PersonaCard({
         {keywords.map((kw, i) => (
           <span
             key={`${kw}-${i}`}
-            className={`text-xs ${
-              isSurface ? "text-amber-500" : "text-pink-400"
-            }`}
+            className={`text-xs ${isSurface ? "text-amber-500" : "text-pink-400"}`}
           >
             #{kw}
           </span>

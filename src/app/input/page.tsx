@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
-import type { InputCategory, UserInput } from "@/types/shared";
-import { INPUT_FIELD_CONFIGS } from "@/lib/constants";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import InputStep from "@/components/input/InputStep";
 import Header from "@/components/layout/Header";
 import ProgressBar from "@/components/ui/ProgressBar";
-import InputStep from "@/components/input/InputStep";
+import { INPUT_FIELD_CONFIGS } from "@/lib/constants";
+import type { InputCategory, UserInput } from "@/types/shared";
 
 export default function InputPage() {
   const router = useRouter();
@@ -34,7 +34,7 @@ export default function InputPage() {
         [config.id]: value,
       }));
     },
-    [config.id]
+    [config.id],
   );
 
   // チップのトグル（テキストに追加/削除）
@@ -71,7 +71,7 @@ export default function InputPage() {
         return { ...prev, [fieldId]: newChips };
       });
     },
-    [config.id, formData]
+    [config.id, formData],
   );
 
   // 次へ
@@ -106,10 +106,7 @@ export default function InputPage() {
       <main className="flex-1 flex flex-col max-w-lg mx-auto w-full px-4 pt-20 pb-8">
         {/* プログレスバー */}
         <div className="mb-8">
-          <ProgressBar
-            currentStep={currentStep + 1}
-            totalSteps={INPUT_FIELD_CONFIGS.length}
-          />
+          <ProgressBar currentStep={currentStep + 1} totalSteps={INPUT_FIELD_CONFIGS.length} />
         </div>
 
         {/* 入力ステップ */}

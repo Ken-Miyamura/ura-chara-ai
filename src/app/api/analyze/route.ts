@@ -1,11 +1,11 @@
 // === POST /api/analyze ===
 // メイン分析エンドポイント。ユーザー入力を受け取り、SSEでストリーミング返却。
 
-import { NextRequest, NextResponse } from "next/server";
-import type { UserInput, RateLimitInfo } from "@/types/shared";
-import { validateUserInput, sanitizeUserInput } from "@/lib/validation";
-import { createSSEStream, SSE_HEADERS } from "@/lib/streamHandler";
+import { type NextRequest, NextResponse } from "next/server";
 import { RATE_LIMIT } from "@/lib/constants";
+import { createSSEStream, SSE_HEADERS } from "@/lib/streamHandler";
+import { sanitizeUserInput, validateUserInput } from "@/lib/validation";
+import type { RateLimitInfo, UserInput } from "@/types/shared";
 
 // === In-memory Rate Limiting ===
 
@@ -16,9 +16,7 @@ const rateLimitMap = new Map<string, number[]>();
 function cleanupRateLimitMap(): void {
   const now = Date.now();
   for (const [ip, timestamps] of rateLimitMap.entries()) {
-    const valid = timestamps.filter(
-      (t) => now - t < RATE_LIMIT.windowMs
-    );
+    const valid = timestamps.filter((t) => now - t < RATE_LIMIT.windowMs);
     if (valid.length === 0) {
       rateLimitMap.delete(ip);
     } else {
@@ -31,10 +29,7 @@ function cleanupRateLimitMap(): void {
 let cleanupTimer: ReturnType<typeof setInterval> | null = null;
 function ensureCleanupTimer(): void {
   if (cleanupTimer === null) {
-    cleanupTimer = setInterval(
-      cleanupRateLimitMap,
-      RATE_LIMIT.cleanupIntervalMs
-    );
+    cleanupTimer = setInterval(cleanupRateLimitMap, RATE_LIMIT.cleanupIntervalMs);
     // Node.js環境ではプロセス終了を妨げないようにunref
     if (typeof cleanupTimer === "object" && "unref" in cleanupTimer) {
       cleanupTimer.unref();
@@ -49,9 +44,7 @@ function checkRateLimit(ip: string): RateLimitInfo {
   const timestamps = rateLimitMap.get(ip) ?? [];
 
   // ウィンドウ内のリクエストのみフィルタ
-  const validTimestamps = timestamps.filter(
-    (t) => now - t < RATE_LIMIT.windowMs
-  );
+  const validTimestamps = timestamps.filter((t) => now - t < RATE_LIMIT.windowMs);
 
   if (validTimestamps.length >= RATE_LIMIT.maxRequests) {
     // 最も古いリクエストが期限切れになるまでの時間
@@ -106,7 +99,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         headers: {
           "Retry-After": String(rateLimit.retryAfterSeconds ?? 60),
         },
-      }
+      },
     );
   }
 
@@ -115,10 +108,7 @@ export async function POST(request: NextRequest): Promise<Response> {
   try {
     rawInput = (await request.json()) as Partial<UserInput>;
   } catch {
-    return NextResponse.json(
-      { error: "リクエストの形式が正しくありません。" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "リクエストの形式が正しくありません。" }, { status: 400 });
   }
 
   // 3. サニタイズ
@@ -132,7 +122,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         error: "入力内容に問題があります。",
         validationErrors: validation.errors,
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -141,8 +131,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
   // 非同期で分析実行（ストリームは即座に返す）
   runAnalysis(sanitizedInput, writer).catch((err: unknown) => {
-    const message =
-      err instanceof Error ? err.message : "予期しないエラーが発生しました。";
+    const message = err instanceof Error ? err.message : "予期しないエラーが発生しました。";
     writer.sendError(message);
     writer.close();
   });
@@ -156,7 +145,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 /** 分析を非同期で実行 */
 async function runAnalysis(
   input: UserInput,
-  writer: ReturnType<typeof createSSEStream>["writer"]
+  writer: ReturnType<typeof createSSEStream>["writer"],
 ): Promise<void> {
   try {
     // Phase 1: データ読み込み
@@ -167,18 +156,14 @@ async function runAnalysis(
 
     // analyzePersona() は teammate-b が src/lib/claude.ts に実装する
     // 動的インポートで存在しない場合もエラーにならないように
-    let analyzePersona: (
-      input: UserInput
-    ) => Promise<import("@/types/shared").AnalysisResult>;
+    let analyzePersona: (input: UserInput) => Promise<import("@/types/shared").AnalysisResult>;
 
     try {
       const claudeModule = await import("@/lib/claude");
       analyzePersona = claudeModule.analyzePersona;
     } catch {
       // claude.ts がまだ実装されていない場合のフォールバック
-      writer.sendError(
-        "分析機能は現在準備中です。もう少しお待ちください。"
-      );
+      writer.sendError("分析機能は現在準備中です。もう少しお待ちください。");
       writer.close();
       return;
     }
@@ -192,8 +177,7 @@ async function runAnalysis(
     writer.sendPhase(4);
     writer.sendResult(result);
   } catch (err: unknown) {
-    const message =
-      err instanceof Error ? err.message : "分析中にエラーが発生しました。";
+    const message = err instanceof Error ? err.message : "分析中にエラーが発生しました。";
     writer.sendError(message);
   } finally {
     writer.close();

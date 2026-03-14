@@ -2,21 +2,18 @@
 // Server-Sent Events のストリーム作成・エンコード・デコード
 
 import type {
+  AnalysisPhase,
+  AnalysisResult,
   StreamEvent,
   StreamEventType,
   TypedStreamEvent,
-  AnalysisPhase,
-  AnalysisResult,
 } from "@/types/shared";
 import { PHASE_LABELS } from "./constants";
 
 // === SSE Encoder ===
 
 /** StreamEventをSSE形式の文字列にエンコード */
-export function encodeStreamEvent(
-  type: StreamEventType,
-  data: StreamEvent
-): string {
+export function encodeStreamEvent(type: StreamEventType, data: StreamEvent): string {
   const event: TypedStreamEvent = { type, data };
   return `event: ${type}\ndata: ${JSON.stringify(event)}\n\n`;
 }
@@ -32,10 +29,7 @@ export function createPhaseEvent(phase: AnalysisPhase): string {
 }
 
 /** 部分テキストイベントを作成 */
-export function createPartialEvent(
-  phase: AnalysisPhase,
-  partialText: string
-): string {
+export function createPartialEvent(phase: AnalysisPhase, partialText: string): string {
   const event: StreamEvent = {
     status: "analyzing",
     phase,
@@ -132,9 +126,7 @@ export function createSSEStream(): {
 // === SSE Decoder (Client-side) ===
 
 /** SSEイベント文字列をパース */
-export function decodeStreamEvent(
-  eventString: string
-): TypedStreamEvent | null {
+export function decodeStreamEvent(eventString: string): TypedStreamEvent | null {
   const lines = eventString.split("\n");
   let eventType: string | null = null;
   let dataStr: string | null = null;
@@ -162,7 +154,7 @@ export function decodeStreamEvent(
 /** SSEストリームを読み取るユーティリティ */
 export async function readSSEStream(
   response: Response,
-  onEvent: (event: TypedStreamEvent) => void
+  onEvent: (event: TypedStreamEvent) => void,
 ): Promise<void> {
   const reader = response.body?.getReader();
   if (!reader) {

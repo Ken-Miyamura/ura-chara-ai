@@ -3,12 +3,12 @@
 
 import type {
   AnalysisResult,
-  SurfacePersona,
-  HiddenPersona,
   GapAnalysis,
   GapLevel,
-  ShareCardData,
+  HiddenPersona,
   PersonaTrait,
+  ShareCardData,
+  SurfacePersona,
   TraitComparison,
 } from "@/types/shared";
 
@@ -26,20 +26,14 @@ const GAP_LEVEL_MAP: ReadonlyArray<{
 ];
 
 /** 5つの必須特性軸 */
-const REQUIRED_TRAIT_LABELS = [
-  "社交性",
-  "行動力",
-  "感受性",
-  "論理性",
-  "自己主張",
-] as const;
+const REQUIRED_TRAIT_LABELS = ["社交性", "行動力", "感受性", "論理性", "自己主張"] as const;
 
 /** 解析エラー用のカスタムエラークラス */
 export class AnalysisParseError extends Error {
   constructor(
     message: string,
     public readonly field?: string,
-    public readonly rawData?: unknown
+    public readonly rawData?: unknown,
   ) {
     super(message);
     this.name = "AnalysisParseError";
@@ -74,19 +68,17 @@ export function getGapLevel(score: number): {
 export function parseAnalysisResponse(
   response: { content: ReadonlyArray<{ type: string; input?: unknown }> },
   id: string,
-  analyzedAt: string
+  analyzedAt: string,
 ): AnalysisResult {
   // tool_use ブロックを全て取得し、inputをマージ
   // Haikuは surface/hidden/gap/shareCard を別々の tool_use ブロックで返すことがある
-  const toolUseBlocks = response.content.filter(
-    (block) => block.type === "tool_use"
-  );
+  const toolUseBlocks = response.content.filter((block) => block.type === "tool_use");
 
   if (toolUseBlocks.length === 0) {
     throw new AnalysisParseError(
       "Claude APIレスポンスにtool_useブロックが見つかりません。",
       "content",
-      response.content
+      response.content,
     );
   }
 
@@ -100,10 +92,10 @@ export function parseAnalysisResponse(
   }
 
   // 各セクションの解析・バリデーション
-  const surface = parseSurfacePersona(data["surface"]);
-  const hidden = parseHiddenPersona(data["hidden"]);
-  const gap = parseGapAnalysis(data["gap"], surface, hidden);
-  const shareCard = parseShareCard(data["shareCard"], surface, hidden, gap);
+  const surface = parseSurfacePersona(data.surface);
+  const hidden = parseHiddenPersona(data.hidden);
+  const gap = parseGapAnalysis(data.gap, surface, hidden);
+  const shareCard = parseShareCard(data.shareCard, surface, hidden, gap);
 
   return {
     id,
@@ -121,7 +113,7 @@ function parseSurfacePersona(raw: unknown): SurfacePersona {
     throw new AnalysisParseError(
       "表の顔（surface）データが不正または欠落しています。",
       "surface",
-      raw
+      raw,
     );
   }
 
@@ -131,22 +123,14 @@ function parseSurfacePersona(raw: unknown): SurfacePersona {
   validateRequiredString(data, "emoji", "surface.emoji");
   validateRequiredString(data, "summary", "surface.summary");
   validateStringArray(data, "traits", "surface.traits");
-  const scoredTraits = parseScoredTraits(
-    data["scoredTraits"],
-    "surface.scoredTraits"
-  );
-  const confidence = validateNumber(
-    data["confidence"],
-    "surface.confidence",
-    0,
-    100
-  );
+  const scoredTraits = parseScoredTraits(data.scoredTraits, "surface.scoredTraits");
+  const confidence = validateNumber(data.confidence, "surface.confidence", 0, 100);
 
   return {
-    title: data["title"] as string,
-    emoji: data["emoji"] as string,
-    summary: data["summary"] as string,
-    traits: data["traits"] as string[],
+    title: data.title as string,
+    emoji: data.emoji as string,
+    summary: data.summary as string,
+    traits: data.traits as string[],
     scoredTraits,
     confidence,
   };
@@ -158,7 +142,7 @@ function parseHiddenPersona(raw: unknown): HiddenPersona {
     throw new AnalysisParseError(
       "裏の顔（hidden）データが不正または欠落しています。",
       "hidden",
-      raw
+      raw,
     );
   }
 
@@ -168,26 +152,18 @@ function parseHiddenPersona(raw: unknown): HiddenPersona {
   validateRequiredString(data, "emoji", "hidden.emoji");
   validateRequiredString(data, "summary", "hidden.summary");
   validateStringArray(data, "traits", "hidden.traits");
-  const scoredTraits = parseScoredTraits(
-    data["scoredTraits"],
-    "hidden.scoredTraits"
-  );
-  const confidence = validateNumber(
-    data["confidence"],
-    "hidden.confidence",
-    0,
-    100
-  );
+  const scoredTraits = parseScoredTraits(data.scoredTraits, "hidden.scoredTraits");
+  const confidence = validateNumber(data.confidence, "hidden.confidence", 0, 100);
   validateStringArray(data, "evidence", "hidden.evidence");
 
   return {
-    title: data["title"] as string,
-    emoji: data["emoji"] as string,
-    summary: data["summary"] as string,
-    traits: data["traits"] as string[],
+    title: data.title as string,
+    emoji: data.emoji as string,
+    summary: data.summary as string,
+    traits: data.traits as string[],
     scoredTraits,
     confidence,
-    evidence: data["evidence"] as string[],
+    evidence: data.evidence as string[],
   };
 }
 
@@ -195,34 +171,24 @@ function parseHiddenPersona(raw: unknown): HiddenPersona {
 function parseGapAnalysis(
   raw: unknown,
   surface: SurfacePersona,
-  hidden: HiddenPersona
+  hidden: HiddenPersona,
 ): GapAnalysis {
   if (!raw || typeof raw !== "object") {
     throw new AnalysisParseError(
       "ギャップ分析（gap）データが不正または欠落しています。",
       "gap",
-      raw
+      raw,
     );
   }
 
   const data = raw as Record<string, unknown>;
 
-  const overallGapScore = validateNumber(
-    data["overallGapScore"],
-    "gap.overallGapScore",
-    0,
-    100
-  );
+  const overallGapScore = validateNumber(data.overallGapScore, "gap.overallGapScore", 0, 100);
 
   // GapLevel をスコアから正しく算出（Claudeの出力よりスコアベースのマッピングを優先）
-  const { level: gapLevel, label: gapLevelLabel } =
-    getGapLevel(overallGapScore);
+  const { level: gapLevel, label: gapLevelLabel } = getGapLevel(overallGapScore);
 
-  const traitComparisons = parseTraitComparisons(
-    data["traitComparisons"],
-    surface,
-    hidden
-  );
+  const traitComparisons = parseTraitComparisons(data.traitComparisons, surface, hidden);
 
   validateRequiredString(data, "aiComment", "gap.aiComment");
   validateRequiredString(data, "surprisingFinding", "gap.surprisingFinding");
@@ -232,8 +198,8 @@ function parseGapAnalysis(
     gapLevel,
     gapLevelLabel,
     traitComparisons,
-    aiComment: data["aiComment"] as string,
-    surprisingFinding: data["surprisingFinding"] as string,
+    aiComment: data.aiComment as string,
+    surprisingFinding: data.surprisingFinding as string,
   };
 }
 
@@ -241,7 +207,7 @@ function parseGapAnalysis(
 function parseTraitComparisons(
   raw: unknown,
   surface: SurfacePersona,
-  hidden: HiddenPersona
+  hidden: HiddenPersona,
 ): TraitComparison[] {
   if (!Array.isArray(raw)) {
     // ClaudeがtraitComparisonsを返さなかった場合、scoredTraitsから生成
@@ -255,13 +221,13 @@ function parseTraitComparisons(
     const comp = item as Record<string, unknown>;
 
     comparisons.push({
-      category: (comp["category"] as string) || "",
-      icon: (comp["icon"] as string) || "",
-      surfaceLabel: (comp["surfaceLabel"] as string) || "",
-      hiddenLabel: (comp["hiddenLabel"] as string) || "",
-      surfaceScore: validateNumber(comp["surfaceScore"], "surfaceScore", 0, 100),
-      hiddenScore: validateNumber(comp["hiddenScore"], "hiddenScore", 0, 100),
-      gap: validateNumber(comp["gap"], "gap", 0, 100),
+      category: (comp.category as string) || "",
+      icon: (comp.icon as string) || "",
+      surfaceLabel: (comp.surfaceLabel as string) || "",
+      hiddenLabel: (comp.hiddenLabel as string) || "",
+      surfaceScore: validateNumber(comp.surfaceScore, "surfaceScore", 0, 100),
+      hiddenScore: validateNumber(comp.hiddenScore, "hiddenScore", 0, 100),
+      gap: validateNumber(comp.gap, "gap", 0, 100),
     });
   }
 
@@ -282,14 +248,14 @@ function parseTraitComparisons(
 /** ペルソナのscoredTraitsから特性比較を生成するフォールバック */
 function buildTraitComparisonsFromPersonas(
   surface: SurfacePersona,
-  hidden: HiddenPersona
+  hidden: HiddenPersona,
 ): TraitComparison[] {
   const defaultIcons: Record<string, string> = {
-    "社交性": "🎭",
-    "行動力": "⚡",
-    "感受性": "💖",
-    "論理性": "🧠",
-    "自己主張": "💬",
+    社交性: "🎭",
+    行動力: "⚡",
+    感受性: "💖",
+    論理性: "🧠",
+    自己主張: "💬",
   };
 
   return REQUIRED_TRAIT_LABELS.map((label) => {
@@ -315,7 +281,7 @@ function parseShareCard(
   raw: unknown,
   surface: SurfacePersona,
   hidden: HiddenPersona,
-  gap: GapAnalysis
+  gap: GapAnalysis,
 ): ShareCardData {
   // shareCardデータが不正の場合、他のデータから自動生成
   if (!raw || typeof raw !== "object") {
@@ -325,32 +291,20 @@ function parseShareCard(
   const data = raw as Record<string, unknown>;
 
   return {
-    surfaceTitle:
-      typeof data["surfaceTitle"] === "string"
-        ? data["surfaceTitle"]
-        : surface.title,
-    hiddenTitle:
-      typeof data["hiddenTitle"] === "string"
-        ? data["hiddenTitle"]
-        : hidden.title,
-    surfaceEmoji:
-      typeof data["surfaceEmoji"] === "string"
-        ? data["surfaceEmoji"]
-        : surface.emoji,
-    hiddenEmoji:
-      typeof data["hiddenEmoji"] === "string"
-        ? data["hiddenEmoji"]
-        : hidden.emoji,
+    surfaceTitle: typeof data.surfaceTitle === "string" ? data.surfaceTitle : surface.title,
+    hiddenTitle: typeof data.hiddenTitle === "string" ? data.hiddenTitle : hidden.title,
+    surfaceEmoji: typeof data.surfaceEmoji === "string" ? data.surfaceEmoji : surface.emoji,
+    hiddenEmoji: typeof data.hiddenEmoji === "string" ? data.hiddenEmoji : hidden.emoji,
     gapScore: gap.overallGapScore,
     gapLevel: gap.gapLevel,
     gapLevelLabel: gap.gapLevelLabel,
     catchphrase:
-      typeof data["catchphrase"] === "string"
-        ? data["catchphrase"]
+      typeof data.catchphrase === "string"
+        ? data.catchphrase
         : `${surface.title} × ${hidden.title}`,
     shareText:
-      typeof data["shareText"] === "string"
-        ? data["shareText"]
+      typeof data.shareText === "string"
+        ? data.shareText
         : `${surface.title}だと思ってたら、中身は${hidden.title}でした。ギャップスコア: ${gap.overallGapScore}点 #裏キャラAI`,
   };
 }
@@ -359,7 +313,7 @@ function parseShareCard(
 function buildShareCardFallback(
   surface: SurfacePersona,
   hidden: HiddenPersona,
-  gap: GapAnalysis
+  gap: GapAnalysis,
 ): ShareCardData {
   return {
     surfaceTitle: surface.title,
@@ -375,16 +329,9 @@ function buildShareCardFallback(
 }
 
 /** スコア付き特性の解析 */
-function parseScoredTraits(
-  raw: unknown,
-  fieldPath: string
-): PersonaTrait[] {
+function parseScoredTraits(raw: unknown, fieldPath: string): PersonaTrait[] {
   if (!Array.isArray(raw)) {
-    throw new AnalysisParseError(
-      `${fieldPath}は配列である必要があります。`,
-      fieldPath,
-      raw
-    );
+    throw new AnalysisParseError(`${fieldPath}は配列である必要があります。`, fieldPath, raw);
   }
 
   const traits: PersonaTrait[] = [];
@@ -394,10 +341,9 @@ function parseScoredTraits(
     const trait = item as Record<string, unknown>;
 
     traits.push({
-      label: typeof trait["label"] === "string" ? trait["label"] : "",
-      score: validateNumber(trait["score"], `${fieldPath}[].score`, 0, 100),
-      description:
-        typeof trait["description"] === "string" ? trait["description"] : "",
+      label: typeof trait.label === "string" ? trait.label : "",
+      score: validateNumber(trait.score, `${fieldPath}[].score`, 0, 100),
+      description: typeof trait.description === "string" ? trait.description : "",
     });
   }
 
@@ -408,7 +354,7 @@ function parseScoredTraits(
       throw new AnalysisParseError(
         `${fieldPath}に必須特性「${required}」が含まれていません。`,
         fieldPath,
-        raw
+        raw,
       );
     }
   }
@@ -421,46 +367,29 @@ function parseScoredTraits(
 function validateRequiredString(
   data: Record<string, unknown>,
   key: string,
-  fieldPath: string
+  fieldPath: string,
 ): void {
   if (typeof data[key] !== "string" || (data[key] as string).trim() === "") {
     throw new AnalysisParseError(
       `${fieldPath}は空でない文字列である必要があります。`,
       fieldPath,
-      data[key]
+      data[key],
     );
   }
 }
 
-function validateStringArray(
-  data: Record<string, unknown>,
-  key: string,
-  fieldPath: string
-): void {
+function validateStringArray(data: Record<string, unknown>, key: string, fieldPath: string): void {
   if (!Array.isArray(data[key])) {
-    throw new AnalysisParseError(
-      `${fieldPath}は配列である必要があります。`,
-      fieldPath,
-      data[key]
-    );
+    throw new AnalysisParseError(`${fieldPath}は配列である必要があります。`, fieldPath, data[key]);
   }
 }
 
-function validateNumber(
-  value: unknown,
-  fieldPath: string,
-  min: number,
-  max: number
-): number {
-  if (typeof value !== "number" || isNaN(value)) {
+function validateNumber(value: unknown, fieldPath: string, min: number, max: number): number {
+  if (typeof value !== "number" || Number.isNaN(value)) {
     // 文字列で数値が入っている場合の対応
     const parsed = Number(value);
-    if (isNaN(parsed)) {
-      throw new AnalysisParseError(
-        `${fieldPath}は数値である必要があります。`,
-        fieldPath,
-        value
-      );
+    if (Number.isNaN(parsed)) {
+      throw new AnalysisParseError(`${fieldPath}は数値である必要があります。`, fieldPath, value);
     }
     return Math.max(min, Math.min(max, Math.round(parsed)));
   }

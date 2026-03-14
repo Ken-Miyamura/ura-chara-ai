@@ -1,18 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import type { AnalysisResult } from "@/types/shared";
-import { useShareCard } from "@/hooks/useShareCard";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
 import ShareButton from "@/components/share/ShareButton";
+import { useShareCard } from "@/hooks/useShareCard";
+import type { AnalysisResult } from "@/types/shared";
 
 export default function SharePage() {
   const router = useRouter();
   const [result, setResult] = useState<AnalysisResult | null>(null);
-  const { cardRef, shareToTwitter, downloadCard, isGenerating } =
-    useShareCard();
+  const { cardRef, shareToTwitter, downloadCard, isGenerating } = useShareCard();
 
   // sessionStorageから結果読み込み
   useEffect(() => {
@@ -51,36 +50,21 @@ export default function SharePage() {
           <h2 className="text-center text-xl font-bold">シェアカード</h2>
 
           {/* シェアカードプレビュー */}
-          <div
-            ref={cardRef}
-            className="rounded-2xl overflow-hidden border border-zinc-800"
-          >
+          <div ref={cardRef} className="rounded-2xl overflow-hidden border border-zinc-800">
             <div className="bg-gradient-to-r from-surface-bright to-surface-dark">
               <div className="grid grid-cols-2">
                 {/* 表の顔（左: 明るい） */}
                 <div className="p-5 bg-gradient-to-br from-amber-50 to-orange-100 text-zinc-800">
-                  <p className="text-xs text-amber-600 mb-1 font-medium">
-                    表の顔
-                  </p>
-                  <div className="text-3xl mb-2">
-                    {result.surface.emoji}
-                  </div>
-                  <p className="text-sm font-bold leading-tight">
-                    {result.surface.title}
-                  </p>
+                  <p className="text-xs text-amber-600 mb-1 font-medium">表の顔</p>
+                  <div className="text-3xl mb-2">{result.surface.emoji}</div>
+                  <p className="text-sm font-bold leading-tight">{result.surface.title}</p>
                 </div>
 
                 {/* 裏の顔（右: ダーク） */}
                 <div className="p-5 bg-gradient-to-br from-zinc-900 to-purple-950 text-zinc-100">
-                  <p className="text-xs text-purple-400 mb-1 font-medium">
-                    裏の顔
-                  </p>
-                  <div className="text-3xl mb-2">
-                    {result.hidden.emoji}
-                  </div>
-                  <p className="text-sm font-bold leading-tight">
-                    {result.hidden.title}
-                  </p>
+                  <p className="text-xs text-purple-400 mb-1 font-medium">裏の顔</p>
+                  <div className="text-3xl mb-2">{result.hidden.emoji}</div>
+                  <p className="text-sm font-bold leading-tight">{result.hidden.title}</p>
                 </div>
               </div>
 
@@ -90,26 +74,18 @@ export default function SharePage() {
                 <p className="text-3xl font-bold bg-gradient-to-r from-primary-light to-accent bg-clip-text text-transparent">
                   {result.gap.overallGapScore}
                 </p>
-                <p className="text-xs text-zinc-400 mt-1">
-                  {result.gap.gapLevelLabel}
-                </p>
+                <p className="text-xs text-zinc-400 mt-1">{result.gap.gapLevelLabel}</p>
               </div>
 
               {/* キャッチフレーズ */}
               <div className="bg-zinc-950 py-3 px-4 text-center">
-                <p className="text-sm text-zinc-300 italic">
-                  {result.shareCard.catchphrase}
-                </p>
+                <p className="text-sm text-zinc-300 italic">{result.shareCard.catchphrase}</p>
               </div>
 
               {/* フッター */}
               <div className="bg-zinc-950 py-2 px-4 flex justify-between items-center border-t border-zinc-800">
-                <span className="text-xs text-zinc-600">
-                  あなたも診断してみる？
-                </span>
-                <span className="text-xs text-primary-light font-medium">
-                  #裏キャラAI
-                </span>
+                <span className="text-xs text-zinc-600">あなたも診断してみる？</span>
+                <span className="text-xs text-primary-light font-medium">#裏キャラAI</span>
               </div>
             </div>
           </div>

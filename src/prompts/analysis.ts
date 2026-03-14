@@ -16,13 +16,13 @@ export function buildAnalysisPrompt(input: UserInput): string {
 
   // オプションフィールド — 入力がある場合のみ内容を表示、なければ（未入力）
   sections.push(
-    `【1日のスケジュール】\n<user_input>${input.schedule.trim() || "（未入力）"}</user_input>`
+    `【1日のスケジュール】\n<user_input>${input.schedule.trim() || "（未入力）"}</user_input>`,
   );
   sections.push(
-    `【よく聴く音楽】\n<user_input>${input.musicTaste.trim() || "（未入力）"}</user_input>`
+    `【よく聴く音楽】\n<user_input>${input.musicTaste.trim() || "（未入力）"}</user_input>`,
   );
   sections.push(
-    `【人からよく言われる第一印象】\n<user_input>${input.firstImpression.trim() || "（未入力）"}</user_input>`
+    `【人からよく言われる第一印象】\n<user_input>${input.firstImpression.trim() || "（未入力）"}</user_input>`,
   );
 
   return `以下の<user_input>タグ内のデータから、この人の「表の顔」と「裏の顔」を分析してください。
@@ -50,8 +50,7 @@ ${sections.join("\n\n")}
  */
 export const ANALYSIS_RESULT_TOOL_SCHEMA = {
   name: "submit_analysis_result",
-  description:
-    "分析結果をAnalysisResultスキーマに準拠した形式で提出する。全フィールド必須。",
+  description: "分析結果をAnalysisResultスキーマに準拠した形式で提出する。全フィールド必須。",
   input_schema: {
     type: "object" as const,
     required: ["surface", "hidden", "gap", "shareCard"],
@@ -59,19 +58,11 @@ export const ANALYSIS_RESULT_TOOL_SCHEMA = {
       surface: {
         type: "object" as const,
         description: "表の顔（パブリックペルソナ）",
-        required: [
-          "title",
-          "emoji",
-          "summary",
-          "traits",
-          "scoredTraits",
-          "confidence",
-        ],
+        required: ["title", "emoji", "summary", "traits", "scoredTraits", "confidence"],
         properties: {
           title: {
             type: "string" as const,
-            description:
-              "ペルソナ名 (例: 意識高い系カフェワーカー)",
+            description: "ペルソナ名 (例: 意識高い系カフェワーカー)",
           },
           emoji: {
             type: "string" as const,
@@ -84,8 +75,7 @@ export const ANALYSIS_RESULT_TOOL_SCHEMA = {
           traits: {
             type: "array" as const,
             items: { type: "string" as const },
-            description:
-              "3-5個の表示用トレイトラベル (例: [\"社交的\", \"ポジティブ\", \"アクティブ\"])",
+            description: '3-5個の表示用トレイトラベル (例: ["社交的", "ポジティブ", "アクティブ"])',
           },
           scoredTraits: {
             type: "array" as const,
@@ -95,8 +85,7 @@ export const ANALYSIS_RESULT_TOOL_SCHEMA = {
               properties: {
                 label: {
                   type: "string" as const,
-                  description:
-                    "特性名: 社交性, 行動力, 感受性, 論理性, 自己主張 のいずれか",
+                  description: "特性名: 社交性, 行動力, 感受性, 論理性, 自己主張 のいずれか",
                 },
                 score: {
                   type: "number" as const,
@@ -119,20 +108,11 @@ export const ANALYSIS_RESULT_TOOL_SCHEMA = {
       hidden: {
         type: "object" as const,
         description: "裏の顔（隠れたペルソナ）",
-        required: [
-          "title",
-          "emoji",
-          "summary",
-          "traits",
-          "scoredTraits",
-          "confidence",
-          "evidence",
-        ],
+        required: ["title", "emoji", "summary", "traits", "scoredTraits", "confidence", "evidence"],
         properties: {
           title: {
             type: "string" as const,
-            description:
-              "ペルソナ名 (例: 布団から出たくないインドア廃人)",
+            description: "ペルソナ名 (例: 布団から出たくないインドア廃人)",
           },
           emoji: {
             type: "string" as const,
@@ -155,8 +135,7 @@ export const ANALYSIS_RESULT_TOOL_SCHEMA = {
               properties: {
                 label: {
                   type: "string" as const,
-                  description:
-                    "特性名: 社交性, 行動力, 感受性, 論理性, 自己主張 のいずれか",
+                  description: "特性名: 社交性, 行動力, 感受性, 論理性, 自己主張 のいずれか",
                 },
                 score: {
                   type: "number" as const,
@@ -177,20 +156,14 @@ export const ANALYSIS_RESULT_TOOL_SCHEMA = {
           evidence: {
             type: "array" as const,
             items: { type: "string" as const },
-            description:
-              "データから読み取れた根拠 (3-5個)",
+            description: "データから読み取れた根拠 (3-5個)",
           },
         },
       },
       gap: {
         type: "object" as const,
         description: "ギャップ分析結果",
-        required: [
-          "overallGapScore",
-          "traitComparisons",
-          "aiComment",
-          "surprisingFinding",
-        ],
+        required: ["overallGapScore", "traitComparisons", "aiComment", "surprisingFinding"],
         properties: {
           overallGapScore: {
             type: "number" as const,
@@ -220,13 +193,11 @@ export const ANALYSIS_RESULT_TOOL_SCHEMA = {
                 },
                 surfaceLabel: {
                   type: "string" as const,
-                  description:
-                    "表の顔の短い説明 (例: みんなでワイワイ派)",
+                  description: "表の顔の短い説明 (例: みんなでワイワイ派)",
                 },
                 hiddenLabel: {
                   type: "string" as const,
-                  description:
-                    "裏の顔の短い説明 (例: 実は一人が好き)",
+                  description: "裏の顔の短い説明 (例: 実は一人が好き)",
                 },
                 surfaceScore: {
                   type: "number" as const,
@@ -246,8 +217,7 @@ export const ANALYSIS_RESULT_TOOL_SCHEMA = {
           },
           aiComment: {
             type: "string" as const,
-            description:
-              "ギャップについてのAIコメント（楽しいまとめ段落）",
+            description: "ギャップについてのAIコメント（楽しいまとめ段落）",
           },
           surprisingFinding: {
             type: "string" as const,
@@ -290,8 +260,7 @@ export const ANALYSIS_RESULT_TOOL_SCHEMA = {
           },
           catchphrase: {
             type: "string" as const,
-            description:
-              "キャッチフレーズ (例: 見た目は天使、中身は魔王)",
+            description: "キャッチフレーズ (例: 見た目は天使、中身は魔王)",
           },
           shareText: {
             type: "string" as const,
@@ -302,4 +271,4 @@ export const ANALYSIS_RESULT_TOOL_SCHEMA = {
       },
     },
   },
-} as const;
+};

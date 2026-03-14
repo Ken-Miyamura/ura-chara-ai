@@ -35,9 +35,7 @@ export default function GapScoreDisplay({
       transition={{ duration: 0.6, delay }}
       className="text-center space-y-4"
     >
-      <h3 className="text-sm text-zinc-400 tracking-wider uppercase">
-        ギャップスコア
-      </h3>
+      <h3 className="text-sm text-zinc-400 tracking-wider uppercase">ギャップスコア</h3>
 
       <GapMeter score={score} delay={delay + 0.2} />
 
@@ -46,11 +44,7 @@ export default function GapScoreDisplay({
         animate={{ opacity: 1 }}
         transition={{ delay: delay + 1.5, duration: 0.5 }}
       >
-        <span
-          className={`text-lg font-bold ${levelColorMap[level]}`}
-        >
-          {levelLabel}
-        </span>
+        <span className={`text-lg font-bold ${levelColorMap[level]}`}>{levelLabel}</span>
       </motion.div>
 
       <motion.p

@@ -1,7 +1,7 @@
 // === UraChara AI - Test Fixtures ===
 // テスト用のサンプルデータ（リアルな日本語ユーザーデータ）
 
-import type { UserInput, AnalysisResult } from "@/types/shared";
+import type { AnalysisResult, UserInput } from "@/types/shared";
 
 // === Sample 1: High Gap Score User ===
 // 表: キラキラSNS投稿のアクティブ系
@@ -29,11 +29,31 @@ export const highGapExpectedResult: AnalysisResult = {
       "SNSではおしゃれカフェでの作業風景を投稿し、週末はジムで自分磨き。周りからは「キラキラしてる」と言われるタイプ。トレンドにも敏感で、新しいものにはすぐ飛びつく行動派。",
     traits: ["社交的", "ポジティブ", "アクティブ", "意識高い", "トレンド敏感"],
     scoredTraits: [
-      { label: "社交性", score: 82, description: "友達とのランチやBBQなど、グループ活動を頻繁に投稿。社交的な印象を強く発信。" },
-      { label: "行動力", score: 78, description: "朝活、ジム、カフェ巡りなどアクティブなライフスタイルを演出。" },
-      { label: "感受性", score: 45, description: "映画で泣く一面はあるが、基本的にはポジティブでクールな印象。" },
-      { label: "論理性", score: 60, description: "作業カフェ利用など、効率を意識する姿勢が見える。" },
-      { label: "自己主張", score: 71, description: "おすすめや感想をはっきり発信。自分の意見を持っている印象。" },
+      {
+        label: "社交性",
+        score: 82,
+        description: "友達とのランチやBBQなど、グループ活動を頻繁に投稿。社交的な印象を強く発信。",
+      },
+      {
+        label: "行動力",
+        score: 78,
+        description: "朝活、ジム、カフェ巡りなどアクティブなライフスタイルを演出。",
+      },
+      {
+        label: "感受性",
+        score: 45,
+        description: "映画で泣く一面はあるが、基本的にはポジティブでクールな印象。",
+      },
+      {
+        label: "論理性",
+        score: 60,
+        description: "作業カフェ利用など、効率を意識する姿勢が見える。",
+      },
+      {
+        label: "自己主張",
+        score: 71,
+        description: "おすすめや感想をはっきり発信。自分の意見を持っている印象。",
+      },
     ],
     confidence: 85,
   },
@@ -44,11 +64,31 @@ export const highGapExpectedResult: AnalysisResult = {
       "カフェで作業してる風だけど、実はYouTube見てる時間の方が長い。筋トレもサボりがちで、本当の週末は布団の中。深夜アニメとVtuberが生きがい。",
     traits: ["インドア派", "オタク気質", "ズボラ", "夜型", "一人好き"],
     scoredTraits: [
-      { label: "社交性", score: 35, description: "友達との予定は月2回程度。実際はほぼ家で一人の時間を過ごしている。" },
-      { label: "行動力", score: 28, description: "ジムは週2でサボりがち。二度寝常習犯。行動より妄想派。" },
-      { label: "感受性", score: 72, description: "アニメやVtuberに深く没入。音楽の趣味にも感受性の高さが表れている。" },
-      { label: "論理性", score: 55, description: "SNS用の写真を先に撮るなど、計算はできるがそこまで論理的ではない。" },
-      { label: "自己主張", score: 30, description: "本当の趣味（アニメ、Vtuber）は隠しがち。空気を読んで合わせるタイプ。" },
+      {
+        label: "社交性",
+        score: 35,
+        description: "友達との予定は月2回程度。実際はほぼ家で一人の時間を過ごしている。",
+      },
+      {
+        label: "行動力",
+        score: 28,
+        description: "ジムは週2でサボりがち。二度寝常習犯。行動より妄想派。",
+      },
+      {
+        label: "感受性",
+        score: 72,
+        description: "アニメやVtuberに深く没入。音楽の趣味にも感受性の高さが表れている。",
+      },
+      {
+        label: "論理性",
+        score: 55,
+        description: "SNS用の写真を先に撮るなど、計算はできるがそこまで論理的ではない。",
+      },
+      {
+        label: "自己主張",
+        score: 30,
+        description: "本当の趣味（アニメ、Vtuber）は隠しがち。空気を読んで合わせるタイプ。",
+      },
     ],
     confidence: 80,
     evidence: [
@@ -139,10 +179,8 @@ export const lowGapUserInput: UserInput = {
     "ゲーム（RPGとFPS）、アニメ、漫画、ラーメン巡り。基本インドア。たまに猫カフェ。最近はDead by Daylightにハマってる。",
   schedule:
     "8時起床→9-18時仕事（リモート）→コンビニで夕飯買う→ゲーム→深夜1時就寝。週末はほぼ家。たまにラーメン屋。",
-  musicTaste:
-    "アニソン、ゲームのサントラ。最近はチェンソーマンのOP聴いてる。米津玄師も好き。",
-  firstImpression:
-    "「静かだね」「マイペースだね」ってよく言われる。自分でもそう思う。",
+  musicTaste: "アニソン、ゲームのサントラ。最近はチェンソーマンのOP聴いてる。米津玄師も好き。",
+  firstImpression: "「静かだね」「マイペースだね」ってよく言われる。自分でもそう思う。",
 };
 
 export const lowGapExpectedResult: AnalysisResult = {
@@ -154,9 +192,21 @@ export const lowGapExpectedResult: AnalysisResult = {
       "自分のペースを大事にするインドア派。ゲームとアニメが好きで、SNSでもそれを隠さない。飾らない投稿スタイルが特徴。",
     traits: ["マイペース", "インドア派", "正直", "穏やか", "こだわり"],
     scoredTraits: [
-      { label: "社交性", score: 30, description: "基本一人行動。SNSでも誰かと一緒の投稿が少ない。" },
-      { label: "行動力", score: 35, description: "行動範囲は狭めだが、好きなこと（ラーメン巡り）には動く。" },
-      { label: "感受性", score: 55, description: "猫カフェやスイーツへの反応から、感性は普通に豊か。" },
+      {
+        label: "社交性",
+        score: 30,
+        description: "基本一人行動。SNSでも誰かと一緒の投稿が少ない。",
+      },
+      {
+        label: "行動力",
+        score: 35,
+        description: "行動範囲は狭めだが、好きなこと（ラーメン巡り）には動く。",
+      },
+      {
+        label: "感受性",
+        score: 55,
+        description: "猫カフェやスイーツへの反応から、感性は普通に豊か。",
+      },
       { label: "論理性", score: 50, description: "ゲームでのランク上昇など、攻略には論理的。" },
       { label: "自己主張", score: 25, description: "静か。意見より感想を述べるタイプ。" },
     ],
@@ -171,9 +221,17 @@ export const lowGapExpectedResult: AnalysisResult = {
     scoredTraits: [
       { label: "社交性", score: 25, description: "表と同じく一人が好き。無理に人付き合いしない。" },
       { label: "行動力", score: 30, description: "表よりやや省エネ。でもそれが心地いいスタイル。" },
-      { label: "感受性", score: 60, description: "好きなものへの愛は深い。猫への反応に優しさが出ている。" },
+      {
+        label: "感受性",
+        score: 60,
+        description: "好きなものへの愛は深い。猫への反応に優しさが出ている。",
+      },
       { label: "論理性", score: 55, description: "ゲーム攻略への集中力は裏でも健在。" },
-      { label: "自己主張", score: 20, description: "主張しないのは表裏一貫。空気というより風のような存在。" },
+      {
+        label: "自己主張",
+        score: 20,
+        description: "主張しないのは表裏一貫。空気というより風のような存在。",
+      },
     ],
     confidence: 70,
     evidence: [

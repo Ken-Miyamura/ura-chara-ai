@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import type { AnalysisResult } from "@/types/shared";
+import { useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
-import PersonaCard from "@/components/result/PersonaCard";
 import GapScoreDisplay from "@/components/result/GapScoreDisplay";
+import PersonaCard from "@/components/result/PersonaCard";
 import TraitComparisonList from "@/components/result/TraitComparisonList";
 import ShareButton from "@/components/share/ShareButton";
+import type { AnalysisResult } from "@/types/shared";
 
 // 演出シーケンスの各フェーズ
 type RevealPhase =
@@ -57,7 +57,7 @@ export default function ResultPage() {
     ];
 
     const timers = sequence.map(({ phase, delay }) =>
-      setTimeout(() => setRevealPhase(phase), delay)
+      setTimeout(() => setRevealPhase(phase), delay),
     );
 
     return () => timers.forEach(clearTimeout);
@@ -168,9 +168,7 @@ export default function ResultPage() {
                   transition={{ delay: 0.5 }}
                   className="mt-4 p-4 rounded-xl bg-zinc-900/50 border border-zinc-800"
                 >
-                  <p className="text-xs text-zinc-500 mb-2">
-                    根拠となったデータ:
-                  </p>
+                  <p className="text-xs text-zinc-500 mb-2">根拠となったデータ:</p>
                   <ul className="space-y-1">
                     {result.hidden.evidence.map((ev, i) => (
                       <li key={i} className="text-xs text-zinc-400">
@@ -199,10 +197,7 @@ export default function ResultPage() {
           {/* Phase 7: Trait comparisons */}
           {phaseIndex >= 6 && (
             <div key="traits" className="my-12">
-              <TraitComparisonList
-                comparisons={result.gap.traitComparisons}
-                delay={0}
-              />
+              <TraitComparisonList comparisons={result.gap.traitComparisons} delay={0} />
 
               {/* 意外な発見 */}
               <motion.div
@@ -211,9 +206,7 @@ export default function ResultPage() {
                 transition={{ delay: 1 }}
                 className="mt-8 p-5 rounded-xl bg-gradient-to-br from-purple-950/50 to-pink-950/50 border border-purple-500/20"
               >
-                <h4 className="text-sm text-zinc-400 mb-2">
-                  ── 意外な発見 ──
-                </h4>
+                <h4 className="text-sm text-zinc-400 mb-2">── 意外な発見 ──</h4>
                 <p className="text-sm text-zinc-300 leading-relaxed">
                   {result.gap.surprisingFinding}
                 </p>

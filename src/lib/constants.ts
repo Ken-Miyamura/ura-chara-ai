@@ -1,20 +1,15 @@
 // === UraChara AI - App-wide Constants ===
 
-import type {
-  GapLevel,
-  InputCategory,
-  InputFieldConfig,
-  AnalysisPhase,
-} from "@/types/shared";
+import type { AnalysisPhase, GapLevel, InputCategory, InputFieldConfig } from "@/types/shared";
 
 // === Gap Level Configuration ===
 
 export interface GapLevelConfig {
   level: GapLevel;
-  label: string;         // 日本語ラベル
-  minScore: number;      // 下限スコア（含む）
-  maxScore: number;      // 上限スコア（含む）
-  description: string;   // 説明文
+  label: string; // 日本語ラベル
+  minScore: number; // 下限スコア（含む）
+  maxScore: number; // 上限スコア（含む）
+  description: string; // 説明文
 }
 
 export const GAP_LEVEL_CONFIGS: readonly GapLevelConfig[] = [
@@ -58,9 +53,7 @@ export const GAP_LEVEL_CONFIGS: readonly GapLevelConfig[] = [
 /** スコアからギャップレベル設定を取得 */
 export function getGapLevelConfig(score: number): GapLevelConfig {
   const clamped = Math.max(0, Math.min(100, Math.round(score)));
-  const config = GAP_LEVEL_CONFIGS.find(
-    (c) => clamped >= c.minScore && clamped <= c.maxScore
-  );
+  const config = GAP_LEVEL_CONFIGS.find((c) => clamped >= c.minScore && clamped <= c.maxScore);
   // フォールバック（到達不可能だが型安全のため）
   return config ?? GAP_LEVEL_CONFIGS[0];
 }
@@ -70,7 +63,7 @@ export function getGapLevelConfig(score: number): GapLevelConfig {
 export interface FieldValidationRule {
   field: InputCategory;
   required: boolean;
-  minChars: number;    // 0 = no minimum
+  minChars: number; // 0 = no minimum
   maxChars: number;
 }
 
@@ -114,8 +107,7 @@ export const INPUT_FIELD_CONFIGS: readonly InputFieldConfig[] = [
     id: "snsContent",
     label: "📱 SNS投稿",
     prompt: "最近のSNS投稿をコピペしてください。Twitter、Instagram、なんでもOK！",
-    placeholder:
-      "例：今日もカフェで仕事なう☕ / 週末は友達と渋谷で飲み🍻 / この映画マジで泣いた😭",
+    placeholder: "例：今日もカフェで仕事なう☕ / 週末は友達と渋谷で飲み🍻 / この映画マジで泣いた😭",
     helpText: "5〜10投稿分くらいがベスト。多いほど精度UP！",
     required: true,
     minChars: 50,
@@ -125,8 +117,7 @@ export const INPUT_FIELD_CONFIGS: readonly InputFieldConfig[] = [
     id: "hobbies",
     label: "🎯 趣味・興味",
     prompt: "ハマっていること、好きなこと、教えてください！",
-    placeholder:
-      "例：最近はソロキャンプにハマってる。あとNetflixで韓ドラ見まくり。週末は筋トレ。",
+    placeholder: "例：最近はソロキャンプにハマってる。あとNetflixで韓ドラ見まくり。週末は筋トレ。",
     helpText: "人に言う趣味も、こっそりな趣味も、全部書いてOK！",
     required: true,
     minChars: 20,
@@ -148,10 +139,8 @@ export const INPUT_FIELD_CONFIGS: readonly InputFieldConfig[] = [
     id: "schedule",
     label: "🕐 1日のスケジュール",
     prompt: "典型的な1日の過ごし方を教えてください。",
-    placeholder:
-      "例：7時起床→満員電車→9-18時仕事→ジム→帰宅→YouTube見ながら寝落ち",
-    helpText:
-      "リアルな過ごし方でOK。「理想の1日」じゃなくて「実際の1日」を！",
+    placeholder: "例：7時起床→満員電車→9-18時仕事→ジム→帰宅→YouTube見ながら寝落ち",
+    helpText: "リアルな過ごし方でOK。「理想の1日」じゃなくて「実際の1日」を！",
     required: false,
     minChars: 0,
     maxChars: 1000,
@@ -171,8 +160,7 @@ export const INPUT_FIELD_CONFIGS: readonly InputFieldConfig[] = [
     id: "firstImpression",
     label: "👤 第一印象",
     prompt: "周りの人にどう思われてると感じますか？",
-    placeholder:
-      "例：よく「しっかりしてるね」って言われるけど、実は毎朝ギリギリで家出てる。",
+    placeholder: "例：よく「しっかりしてるね」って言われるけど、実は毎朝ギリギリで家出てる。",
     helpText: "よく言われること、よく使われるあだ名、第一印象で言われたことなど",
     required: false,
     minChars: 0,

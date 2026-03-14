@@ -1,14 +1,9 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
-import type {
-  AnalysisResult,
-  AnalysisPhase,
-  UserInput,
-  TypedStreamEvent,
-} from "@/types/shared";
-import { readSSEStream } from "@/lib/streamHandler";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PHASE_LABELS } from "@/lib/constants";
+import { readSSEStream } from "@/lib/streamHandler";
+import type { AnalysisPhase, AnalysisResult, TypedStreamEvent, UserInput } from "@/types/shared";
 
 // フェーズの時間設定 (秒)
 const PHASE_TIMINGS: { phase: AnalysisPhase; at: number }[] = [
@@ -99,10 +94,10 @@ export function useAnalysis(): UseAnalysisReturn {
         });
 
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ error: "不明なエラーが発生しました" }));
-          throw new Error(
-            (errorData as { error?: string }).error || `HTTP ${response.status}`
-          );
+          const errorData = await response
+            .json()
+            .catch(() => ({ error: "不明なエラーが発生しました" }));
+          throw new Error((errorData as { error?: string }).error || `HTTP ${response.status}`);
         }
 
         // SSEストリーム処理 (readSSEStream で TypedStreamEvent を正しくパース)
@@ -147,7 +142,7 @@ export function useAnalysis(): UseAnalysisReturn {
         setStatus("error");
       }
     },
-    [startPhaseTimer]
+    [startPhaseTimer],
   );
 
   return {

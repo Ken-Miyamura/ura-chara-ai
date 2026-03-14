@@ -1,9 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { InputFieldConfig } from "@/types/shared";
 import CharCounter from "@/components/ui/CharCounter";
 import TagChips from "@/components/ui/TagChips";
+import type { InputFieldConfig } from "@/types/shared";
 
 interface InputStepProps {
   config: InputFieldConfig;
@@ -33,10 +33,11 @@ export default function InputStep({
 }: InputStepProps) {
   const charCount = value.length;
   const trimmedCharCount = value.trim().length;
-  const isValid =
-    (!config.required || trimmedCharCount >= config.minChars) &&
-    charCount <= config.maxChars;
-  const canProceed = config.required ? trimmedCharCount >= config.minChars && charCount <= config.maxChars : true;
+  const _isValid =
+    (!config.required || trimmedCharCount >= config.minChars) && charCount <= config.maxChars;
+  const canProceed = config.required
+    ? trimmedCharCount >= config.minChars && charCount <= config.maxChars
+    : true;
 
   return (
     <motion.div
@@ -54,11 +55,7 @@ export default function InputStep({
 
       {/* タグチップ (該当ステップのみ) */}
       {config.chips && config.chips.length > 0 && (
-        <TagChips
-          chips={config.chips}
-          onChipClick={onChipToggle}
-          selectedChips={selectedChips}
-        />
+        <TagChips chips={config.chips} onChipClick={onChipToggle} selectedChips={selectedChips} />
       )}
 
       {/* テキストエリア */}
@@ -71,11 +68,7 @@ export default function InputStep({
           maxLength={config.maxChars + 100} // 少し余裕を持たせる
         />
         <div className="mt-2">
-          <CharCounter
-            current={charCount}
-            min={config.minChars}
-            max={config.maxChars}
-          />
+          <CharCounter current={charCount} min={config.minChars} max={config.maxChars} />
         </div>
       </div>
 
@@ -125,11 +118,7 @@ export default function InputStep({
       </div>
 
       {/* 必須マーク */}
-      {config.required && (
-        <p className="text-xs text-zinc-600 text-center">
-          ※ この項目は必須です
-        </p>
-      )}
+      {config.required && <p className="text-xs text-zinc-600 text-center">※ この項目は必須です</p>}
     </motion.div>
   );
 }
