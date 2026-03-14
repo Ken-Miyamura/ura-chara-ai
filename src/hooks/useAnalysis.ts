@@ -5,8 +5,9 @@ import type {
   AnalysisResult,
   AnalysisPhase,
   UserInput,
-  StreamEvent,
+  TypedStreamEvent,
 } from "@/types/shared";
+import { readSSEStream } from "@/lib/streamHandler";
 
 // フェーズラベル (product-design.md Section 2.3 aligned)
 const PHASE_LABELS: Record<AnalysisPhase, string> = {
@@ -111,53 +112,28 @@ export function useAnalysis(): UseAnalysisReturn {
           );
         }
 
-        // SSEストリーム処理
-        const reader = response.body?.getReader();
-        if (!reader) {
-          throw new Error("ストリームの読み取りに失敗しました");
-        }
-
-        const decoder = new TextDecoder();
-        let buffer = "";
+        // SSEストリーム処理 (readSSEStream で TypedStreamEvent を正しくパース)
         let analysisComplete = false;
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
+        await readSSEStream(response, (typed: TypedStreamEvent) => {
+          const event = typed.data;
 
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split("\n");
-          buffer = lines.pop() || "";
-
-          for (const line of lines) {
-            if (line.startsWith("data: ")) {
-              const data = line.slice(6).trim();
-              if (data === "[DONE]") continue;
-
-              try {
-                const event = JSON.parse(data) as StreamEvent;
-
-                if (event.status === "complete" && event.result) {
-                  // フェーズタイマー停止
-                  if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
-                  setResult(event.result);
-                  setStatus("complete");
-                  analysisComplete = true;
-                  return;
-                }
-
-                if (event.status === "error") {
-                  throw new Error(event.error || "分析中にエラーが発生しました");
-                }
-              } catch (parseError) {
-                // JSONパースエラーは無視（部分データの可能性）
-                if (parseError instanceof Error && parseError.message.includes("分析中")) {
-                  throw parseError;
-                }
-              }
-            }
+          if (event.status === "complete" && event.result) {
+            // フェーズタイマー停止
+            if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
+            setResult(event.result);
+            setStatus("complete");
+            analysisComplete = true;
+            return;
           }
-        }
+
+          if (event.status === "error") {
+            // フェーズタイマー停止
+            if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
+            setError(event.error || "分析中にエラーが発生しました");
+            setStatus("error");
+          }
+        });
 
         // ストリーム完了したが結果が取得できなかった場合
         if (!analysisComplete) {
