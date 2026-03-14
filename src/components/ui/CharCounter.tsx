@@ -27,15 +27,9 @@ export default function CharCounter({ current, min, max }: CharCounterProps) {
         {current}/{max} 文字
       </span>
       {isBelowMin && (
-        <span className="text-amber-400 text-xs">
-          あと{min - current}文字以上書いてね
-        </span>
+        <span className="text-amber-400 text-xs">あと{min - current}文字以上書いてね</span>
       )}
-      {isOverMax && (
-        <span className="text-red-400 text-xs">
-          文字数オーバー！
-        </span>
-      )}
+      {isOverMax && <span className="text-red-400 text-xs">文字数オーバー！</span>}
     </div>
   );
 }

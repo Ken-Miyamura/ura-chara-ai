@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import type { UserInput } from "@/types/shared";
-import { useAnalysis } from "@/hooks/useAnalysis";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 import LoadingPhase from "@/components/analysis/LoadingPhase";
 import ErrorMessage from "@/components/ui/ErrorMessage";
+import { useAnalysis } from "@/hooks/useAnalysis";
+import type { UserInput } from "@/types/shared";
 
 // パーティクルの固定位置（ハイドレーションエラー回避）
 const PARTICLE_POSITIONS = [
@@ -29,8 +29,7 @@ const PARTICLE_POSITIONS = [
 
 export default function AnalyzingPage() {
   const router = useRouter();
-  const { startAnalysis, phase, phaseLabel, result, error, status } =
-    useAnalysis();
+  const { startAnalysis, phase, phaseLabel, result, error, status } = useAnalysis();
   const hasStarted = useRef(false);
 
   // マウント時にsessionStorageからデータ取得して分析開始
@@ -119,10 +118,7 @@ export default function AnalyzingPage() {
       {/* メインコンテンツ */}
       <div className="relative z-10">
         {status === "error" && error ? (
-          <ErrorMessage
-            message={error}
-            onRetry={handleRetry}
-          />
+          <ErrorMessage message={error} onRetry={handleRetry} />
         ) : (
           <LoadingPhase phase={phase} label={phaseLabel} />
         )}

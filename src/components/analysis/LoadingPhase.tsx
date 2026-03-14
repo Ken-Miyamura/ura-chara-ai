@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface LoadingPhaseProps {
   phase: number;
@@ -56,18 +56,10 @@ export default function LoadingPhase({ phase, label }: LoadingPhaseProps) {
         {[1, 2, 3, 4].map((p) => (
           <motion.div
             key={p}
-            className={`w-2.5 h-2.5 rounded-full ${
-              p <= phase ? "bg-primary" : "bg-zinc-700"
-            }`}
-            animate={
-              p === phase
-                ? { scale: [1, 1.3, 1], opacity: [0.7, 1, 0.7] }
-                : undefined
-            }
+            className={`w-2.5 h-2.5 rounded-full ${p <= phase ? "bg-primary" : "bg-zinc-700"}`}
+            animate={p === phase ? { scale: [1, 1.3, 1], opacity: [0.7, 1, 0.7] } : undefined}
             transition={
-              p === phase
-                ? { duration: 1, repeat: Infinity, ease: "easeInOut" }
-                : undefined
+              p === phase ? { duration: 1, repeat: Infinity, ease: "easeInOut" } : undefined
             }
           />
         ))}
@@ -91,8 +83,7 @@ export default function LoadingPhase({ phase, label }: LoadingPhaseProps) {
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background:
-            "linear-gradient(transparent 50%, rgba(168, 85, 247, 0.03) 50%)",
+          background: "linear-gradient(transparent 50%, rgba(168, 85, 247, 0.03) 50%)",
           backgroundSize: "100% 4px",
         }}
       />

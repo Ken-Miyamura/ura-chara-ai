@@ -2,9 +2,9 @@
 // クライアント・サーバー両方で使える共通バリデーション
 
 import type {
-  UserInput,
-  InputCategory,
   FieldValidationError,
+  InputCategory,
+  UserInput,
   ValidationResult,
 } from "@/types/shared";
 import { VALIDATION_RULES } from "./constants";
@@ -23,7 +23,7 @@ function getCharCount(value: string | undefined | null): number {
 /** 単一フィールドのバリデーション */
 function validateField(
   field: InputCategory,
-  value: string | undefined | null
+  value: string | undefined | null,
 ): FieldValidationError | null {
   const rule = VALIDATION_RULES[field];
   const charCount = getCharCount(value);
@@ -115,7 +115,7 @@ function getRequiredErrorMessage(field: InputCategory): string {
 function getMinLengthErrorMessage(
   field: InputCategory,
   minChars: number,
-  currentChars: number
+  currentChars: number,
 ): string {
   switch (field) {
     case "snsContent":
@@ -128,9 +128,9 @@ function getMinLengthErrorMessage(
 }
 
 function getMaxLengthErrorMessage(
-  field: InputCategory,
+  _field: InputCategory,
   maxChars: number,
-  currentChars: number
+  currentChars: number,
 ): string {
   return `${maxChars}文字以内にしてね！（現在${currentChars}文字）`;
 }

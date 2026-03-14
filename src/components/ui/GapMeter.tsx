@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, animate, useMotionValueEvent } from "framer-motion";
+import { animate, motion, useMotionValue, useMotionValueEvent, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 
 interface GapMeterProps {

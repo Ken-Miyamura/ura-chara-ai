@@ -1,9 +1,9 @@
 // === POST /api/share ===
 // シェアテキスト生成エンドポイント
 
-import { NextRequest, NextResponse } from "next/server";
-import type { ShareRequest, ShareResponse, ShareCardData } from "@/types/shared";
+import { type NextRequest, NextResponse } from "next/server";
 import { APP_META } from "@/lib/constants";
+import type { ShareCardData, ShareRequest, ShareResponse } from "@/types/shared";
 
 /** ShareCardDataの簡易バリデーション */
 function isValidShareCard(data: unknown): data is ShareCardData {
@@ -36,18 +36,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     body = (await request.json()) as ShareRequest;
   } catch {
-    return NextResponse.json(
-      { error: "リクエストの形式が正しくありません。" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "リクエストの形式が正しくありません。" }, { status: 400 });
   }
 
   // 2. バリデーション
   if (!body.shareCard || !isValidShareCard(body.shareCard)) {
-    return NextResponse.json(
-      { error: "シェアカードのデータが不正です。" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "シェアカードのデータが不正です。" }, { status: 400 });
   }
 
   // 3. シェアテキスト生成

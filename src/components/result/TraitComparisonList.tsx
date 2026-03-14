@@ -10,10 +10,7 @@ interface TraitComparisonListProps {
 }
 
 // 5つのトレイト比較リスト
-export default function TraitComparisonList({
-  comparisons,
-  delay = 0,
-}: TraitComparisonListProps) {
+export default function TraitComparisonList({ comparisons, delay = 0 }: TraitComparisonListProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -21,9 +18,7 @@ export default function TraitComparisonList({
       transition={{ duration: 0.5, delay }}
       className="space-y-6"
     >
-      <h3 className="text-center text-sm text-zinc-400 tracking-wider">
-        ── ギャップ詳細 ──
-      </h3>
+      <h3 className="text-center text-sm text-zinc-400 tracking-wider">── ギャップ詳細 ──</h3>
 
       <div className="space-y-5">
         {comparisons.map((comparison, index) => (
