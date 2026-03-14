@@ -63,7 +63,10 @@ export async function analyzePersona(input: UserInput): Promise<AnalysisResult> 
       { signal: abortController.signal },
     );
   } catch (err) {
-    if (err instanceof Error && err.name === "AbortError") {
+    if (
+      (err instanceof Error && err.name === "AbortError") ||
+      (err instanceof Error && err.message.includes("aborted"))
+    ) {
       throw new Error("分析がタイムアウトしました。もう一度お試しください。");
     }
     throw err;
