@@ -101,6 +101,7 @@ export default function ResultPage() {
           {/* Phase 2: Intro text */}
           {phaseIndex >= 1 && (
             <motion.div
+              key="intro"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="text-center mb-12"
@@ -118,14 +119,14 @@ export default function ResultPage() {
 
           {/* Phase 3: Surface persona */}
           {phaseIndex >= 2 && (
-            <div className="mb-8">
+            <div key="surface" className="mb-8">
               <PersonaCard
                 type="surface"
                 emoji={result.surface.emoji}
                 title={result.surface.title}
                 traits={result.surface.traits}
                 summary={result.surface.summary}
-                keywords={result.surface.traits}
+                keywords={[]}
                 delay={0}
               />
             </div>
@@ -134,6 +135,7 @@ export default function ResultPage() {
           {/* Phase 4: Transition text */}
           {phaseIndex >= 3 && (
             <motion.div
+              key="transition"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
@@ -147,14 +149,14 @@ export default function ResultPage() {
 
           {/* Phase 5: Hidden persona */}
           {phaseIndex >= 4 && (
-            <div className="mb-8">
+            <div key="hidden" className="mb-8">
               <PersonaCard
                 type="hidden"
                 emoji={result.hidden.emoji}
                 title={result.hidden.title}
                 traits={result.hidden.traits}
                 summary={result.hidden.summary}
-                keywords={result.hidden.traits}
+                keywords={[]}
                 delay={0}
               />
 
@@ -183,7 +185,7 @@ export default function ResultPage() {
 
           {/* Phase 6: Gap score */}
           {phaseIndex >= 5 && (
-            <div className="my-12">
+            <div key="gap" className="my-12">
               <GapScoreDisplay
                 score={result.gap.overallGapScore}
                 level={result.gap.gapLevel}
@@ -196,7 +198,7 @@ export default function ResultPage() {
 
           {/* Phase 7: Trait comparisons */}
           {phaseIndex >= 6 && (
-            <div className="my-12">
+            <div key="traits" className="my-12">
               <TraitComparisonList
                 comparisons={result.gap.traitComparisons}
                 delay={0}
@@ -222,6 +224,7 @@ export default function ResultPage() {
           {/* Phase 8: Share button */}
           {phaseIndex >= 7 && (
             <motion.div
+              key="share"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}

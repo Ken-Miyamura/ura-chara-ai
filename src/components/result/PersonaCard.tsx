@@ -78,9 +78,9 @@ export default function PersonaCard({
 
       {/* トレイト */}
       <div className="flex flex-wrap gap-1.5 mb-3">
-        {traits.map((trait) => (
+        {traits.map((trait, i) => (
           <span
-            key={trait}
+            key={`${trait}-${i}`}
             className={`text-xs px-2 py-0.5 rounded-full ${
               isSurface
                 ? "bg-amber-100 text-amber-700"
@@ -94,9 +94,9 @@ export default function PersonaCard({
 
       {/* キーワード */}
       <div className="flex flex-wrap gap-1">
-        {keywords.map((kw) => (
+        {keywords.map((kw, i) => (
           <span
-            key={kw}
+            key={`${kw}-${i}`}
             className={`text-xs ${
               isSurface ? "text-amber-500" : "text-pink-400"
             }`}

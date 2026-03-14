@@ -50,6 +50,11 @@ export default function AnalyzingPage() {
     } catch {
       router.push("/input");
     }
+
+    // Strict Mode の再マウント時に再実行できるようにリセット
+    return () => {
+      hasStarted.current = false;
+    };
   }, [startAnalysis, router]);
 
   // 分析完了時に結果ページへ遷移
