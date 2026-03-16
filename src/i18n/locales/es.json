@@ -1,0 +1,204 @@
+{
+  "landing": {
+    "headline": "UraChara AI",
+    "subheadline": "Tu lado oculto est\u00e1 a punto de ser descubierto...",
+    "description": "Tus publicaciones en redes, hobbies, gustos musicales...\nLa IA revela la brecha entre tu cara p\u00fablica y tu yo secreto.",
+    "cta": "Empezar diagn\u00f3stico 👉",
+    "timeEstimate": "Solo toma 3 minutos",
+    "trustSignal": "🔒 No guardamos datos. Se eliminan autom\u00e1ticamente despu\u00e9s del diagn\u00f3stico.",
+    "sampleCards": [
+      {
+        "surface": { "emoji": "✨", "title": "Trabajador de Caf\u00e9 Aspiracional" },
+        "hidden": { "emoji": "🛋️", "title": "Ermita\u00f1o que No Puede Salir de la Cama" },
+        "score": 74
+      },
+      {
+        "surface": { "emoji": "😊", "title": "Alma de la Fiesta" },
+        "hidden": { "emoji": "🌙", "title": "Explorador Nocturno de Wikipedia" },
+        "score": 68
+      },
+      {
+        "surface": { "emoji": "💪", "title": "Rat\u00f3n de Gimnasio Hardcore" },
+        "hidden": { "emoji": "🍜", "title": "Solo Cocina Una Vez Cada 3 D\u00edas" },
+        "score": 82
+      }
+    ],
+    "surfaceLabel": "Cara P\u00fablica",
+    "hiddenLabel": "Cara Oculta"
+  },
+  "input": {
+    "stepLabels": {
+      "snsContent": "📱 Publicaciones en Redes",
+      "hobbies": "🎯 Hobbies e Intereses",
+      "schedule": "🕐 Rutina Diaria",
+      "musicTaste": "🎵 Gustos Musicales",
+      "firstImpression": "👤 Primera Impresi\u00f3n"
+    },
+    "prompts": {
+      "snsContent": "\u00a1Copia y pega tus publicaciones recientes! Twitter, Instagram, \u00a1lo que sea!",
+      "hobbies": "\u00a1Cu\u00e9ntanos qu\u00e9 te apasiona, qu\u00e9 te encanta!",
+      "schedule": "Cu\u00e9ntanos c\u00f3mo es tu d\u00eda t\u00edpico.",
+      "musicTaste": "\u00bfQu\u00e9 artistas o canciones escuchas?",
+      "firstImpression": "\u00bfC\u00f3mo crees que te ven los dem\u00e1s?"
+    },
+    "placeholders": {
+      "snsContent": "ej: Trabajando desde un caf\u00e9 hoy ☕ / Sali con amigos el finde 🍻 / Esta peli me hizo llorar 😭",
+      "hobbies": "ej: \u00daltimamente me enganch\u00e9 con el camping solo. Maratones de K-dramas en Netflix. Gym los fines.",
+      "schedule": "ej: Despertar 7am → metro lleno → trabajo 9-6 → gym → casa → dormirme viendo YouTube",
+      "musicTaste": "ej: Bad Bunny, Rosalia, Dua Lipa. De noche playlists lo-fi. En secreto amo los OST de anime.",
+      "firstImpression": "ej: La gente dice que soy \"responsable\" pero en realidad salgo corriendo cada ma\u00f1ana."
+    },
+    "helpText": {
+      "snsContent": "\u00a15-10 publicaciones es ideal. \u00a1M\u00e1s = mejor precisi\u00f3n!",
+      "hobbies": "\u00a1Hobbies p\u00fablicos Y placeres secretos — esc\u00edbe todo!",
+      "schedule": "\u00a1Tu d\u00eda REAL, no el ideal!",
+      "musicTaste": "G\u00e9neros, artistas, vibes de playlist — \u00a1lo que sea!",
+      "firstImpression": "Lo que la gente suele decir de ti, apodos, primeras impresiones, etc."
+    },
+    "chips": {
+      "hobbies": [
+        "Anime",
+        "Gaming",
+        "Lectura",
+        "Gym",
+        "Cocina",
+        "Viajes",
+        "Fotograf\u00eda",
+        "Fandom",
+        "DIY",
+        "Inversiones"
+      ],
+      "firstImpression": [
+        "Responsable",
+        "Despistado/a",
+        "Alegre",
+        "Cool",
+        "Serio/a",
+        "Peculiar",
+        "El/La Gracioso/a",
+        "Buen/a Oyente"
+      ]
+    },
+    "buttons": {
+      "next": "Siguiente →",
+      "back": "Volver",
+      "skip": "Saltar →",
+      "submit": "\u00a1Diagnosticarme!"
+    },
+    "requiredMark": "* Este campo es obligatorio",
+    "charCounter": {
+      "unit": "caracteres",
+      "belowMin": "Faltan {remaining} caracteres m\u00e1s",
+      "overMax": "\u00a1Demasiados caracteres!"
+    },
+    "validationErrors": {
+      "snsContentRequired": "\u00a1Las publicaciones son obligatorias! \u00a1Son la clave para encontrar tu lado oculto!",
+      "hobbiesRequired": "\u00a1Los hobbies son obligatorios! \u00a1No podemos encontrar tu lado oculto sin saber qu\u00e9 te gusta!",
+      "defaultRequired": "Este campo es obligatorio.",
+      "snsContentMinLength": "\u00a1Escribe un poco m\u00e1s para que podamos encontrar tu lado oculto! ({remaining} caracteres m\u00e1s)",
+      "hobbiesMinLength": "\u00a1Cu\u00e9ntanos m\u00e1s sobre tus hobbies! ({remaining} caracteres m\u00e1s)",
+      "defaultMinLength": "Se requieren m\u00ednimo {min} caracteres. (Actualmente {current} caracteres)",
+      "maxLength": "\u00a1M\u00e1ximo {max} caracteres! (Actualmente {current} caracteres)"
+    }
+  },
+  "analyzing": {
+    "phaseLabels": {
+      "1": "Cargando tus datos...",
+      "2": "Analizando tu cara p\u00fablica...",
+      "3": "Descubriendo tu lado oculto...",
+      "4": "Calculando puntuaci\u00f3n de brecha..."
+    },
+    "teaserMessages": [
+      "Algo est\u00e1 emergiendo de tus datos...",
+      "Tus publicaciones revelan un lado sorprendente...",
+      "La brecha podr\u00eda ser m\u00e1s grande de lo que piensas...?",
+      "Tu yo oculto est\u00e1 a punto de revelarse..."
+    ]
+  },
+  "result": {
+    "introText": "Tu resultado de diagn\u00f3stico...",
+    "transitionText": "Pero en realidad...",
+    "surfaceLabel": "Cara P\u00fablica",
+    "hiddenLabel": "Cara Oculta",
+    "evidenceTitle": "Evidencia de tus datos:",
+    "gapScoreTitle": "PUNTUACI\u00d3N GAP",
+    "gapDetailTitle": "── Detalles del Gap ──",
+    "gapLabel": "Brecha",
+    "surprisingFindingTitle": "── Hallazgo Sorprendente ──",
+    "shareButton": "Compartir resultados",
+    "retryButton": "Intentar de nuevo",
+    "loading": "Cargando..."
+  },
+  "share": {
+    "title": "Tarjeta para Compartir",
+    "surfaceLabel": "Cara P\u00fablica",
+    "hiddenLabel": "Cara Oculta",
+    "gapScoreLabel": "PUNTUACI\u00d3N GAP",
+    "footerCta": "\u00bfQuieres probarlo t\u00fa tambi\u00e9n?",
+    "hashtag": "#UraCharaAI",
+    "twitterButton": "Compartir en Twitter",
+    "downloadButton": "Guardar imagen",
+    "downloadingButton": "Generando imagen...",
+    "retryButton": "Intentar de nuevo",
+    "shareTextTemplate": "\u00a1Mi personalidad oculta es \"{hiddenTitle}\"! Puntuaci\u00f3n Gap: {gapScore} pts"
+  },
+  "common": {
+    "appName": "UraChara AI",
+    "footer": {
+      "privacy": "No se guardan datos. Se eliminan autom\u00e1ticamente despu\u00e9s del diagn\u00f3stico.",
+      "copyright": "\u00a9 2026 UraChara AI"
+    },
+    "errorTitle": "Ups, algo se rompi\u00f3...",
+    "retryButton": "Intentemos de nuevo 🔄",
+    "apiErrors": {
+      "rateLimited": "Demasiadas solicitudes. Espera un momento e int\u00e9ntalo de nuevo.",
+      "invalidRequest": "Formato de solicitud inv\u00e1lido.",
+      "validationFailed": "Hay un problema con tu entrada.",
+      "unknown": "Ocurri\u00f3 un error desconocido",
+      "analysisNotReady": "La funci\u00f3n de an\u00e1lisis se est\u00e1 preparando. Espera un momento.",
+      "analysisFailed": "Ocurri\u00f3 un error durante el an\u00e1lisis.",
+      "unexpectedError": "Ocurri\u00f3 un error inesperado.",
+      "resultNotFound": "Resultado del an\u00e1lisis no encontrado. Int\u00e9ntalo de nuevo.",
+      "lostInSearch": "\u00a1Nos perdimos buscando tu lado oculto... Intentemos de nuevo!",
+      "shareCardInvalid": "Los datos de la tarjeta para compartir no son v\u00e1lidos."
+    }
+  },
+  "meta": {
+    "appName": "UraChara AI",
+    "tagline": "Estamos a punto de exponer tu personalidad oculta.",
+    "title": "UraChara AI - \u00bfListo para descubrir tu lado oculto?",
+    "description": "Tus publicaciones en redes, hobbies, gustos musicales... La IA revela la brecha entre tu cara p\u00fablica y tu yo secreto.",
+    "ogTitle": "UraChara AI",
+    "ogDescription": "\u00bfListo para descubrir tu lado oculto?",
+    "hashtags": ["UraCharaAI", "PersonalidadOculta"]
+  },
+  "traits": {
+    "sociability": "Sociabilidad",
+    "drive": "Iniciativa",
+    "sensitivity": "Sensibilidad",
+    "logic": "L\u00f3gica",
+    "assertiveness": "Asertividad"
+  },
+  "gapLevels": {
+    "honest": {
+      "label": "Libro Abierto",
+      "description": "Lo que ves es lo que hay. Apenas hay brecha."
+    },
+    "slight": {
+      "label": "Peque\u00f1a Brecha",
+      "description": "Una peque\u00f1a brecha \u2014 te adaptas sutilmente a tu entorno."
+    },
+    "dual": {
+      "label": "Doble Vida",
+      "description": "Sabes leer el ambiente. Dos lados bien distintos."
+    },
+    "moe": {
+      "label": "Encanto del Contraste",
+      "description": "Gran brecha entre tu yo p\u00fablico y privado. El contraste es encantador."
+    },
+    "extreme": {
+      "label": "Persona Totalmente Diferente",
+      "description": "Tu yo p\u00fablico y tu yo privado son completos desconocidos. Vibes de agente doble."
+    }
+  }
+}

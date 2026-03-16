@@ -5,7 +5,8 @@ import { type NextRequest, NextResponse } from "next/server";
 import { RATE_LIMIT } from "@/lib/constants";
 import { createSSEStream, SSE_HEADERS } from "@/lib/streamHandler";
 import { sanitizeUserInput, validateUserInput } from "@/lib/validation";
-import type { RateLimitInfo, UserInput } from "@/types/shared";
+import type { AnalysisResult, Locale, RateLimitInfo, UserInput } from "@/types/shared";
+import { SUPPORTED_LOCALES } from "@/types/shared";
 
 // === In-memory Rate Limiting ===
 
@@ -82,6 +83,14 @@ function getClientIp(request: NextRequest): string {
   return "unknown";
 }
 
+/** ロケールのバリデーション。無効な値の場合は "ja" にフォールバック */
+function validateLocale(value: unknown): Locale {
+  if (typeof value === "string" && (SUPPORTED_LOCALES as readonly string[]).includes(value)) {
+    return value as Locale;
+  }
+  return "ja";
+}
+
 // === Route Handler ===
 
 export async function POST(request: NextRequest): Promise<Response> {
@@ -104,17 +113,21 @@ export async function POST(request: NextRequest): Promise<Response> {
   }
 
   // 2. リクエストボディの解析
-  let rawInput: Partial<UserInput>;
+  let rawBody: Record<string, unknown>;
   try {
-    rawInput = (await request.json()) as Partial<UserInput>;
+    rawBody = (await request.json()) as Record<string, unknown>;
   } catch {
     return NextResponse.json({ error: "リクエストの形式が正しくありません。" }, { status: 400 });
   }
 
-  // 3. サニタイズ
+  // 3. ロケールの取得・バリデーション
+  const locale = validateLocale(rawBody.locale);
+
+  // 4. サニタイズ
+  const rawInput = rawBody as Partial<UserInput>;
   const sanitizedInput = sanitizeUserInput(rawInput);
 
-  // 4. バリデーション
+  // 5. バリデーション
   const validation = validateUserInput(sanitizedInput);
   if (!validation.valid) {
     return NextResponse.json(
@@ -126,11 +139,11 @@ export async function POST(request: NextRequest): Promise<Response> {
     );
   }
 
-  // 5. SSEストリームを作成して分析開始
+  // 6. SSEストリームを作成して分析開始
   const { stream, writer } = createSSEStream();
 
   // 非同期で分析実行（ストリームは即座に返す）
-  runAnalysis(sanitizedInput, writer).catch((err: unknown) => {
+  runAnalysis(sanitizedInput, locale, writer).catch((err: unknown) => {
     const message = err instanceof Error ? err.message : "予期しないエラーが発生しました。";
     writer.sendError(message);
     writer.close();
@@ -145,6 +158,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 /** 分析を非同期で実行 */
 async function runAnalysis(
   input: UserInput,
+  locale: Locale,
   writer: ReturnType<typeof createSSEStream>["writer"],
 ): Promise<void> {
   try {
@@ -154,9 +168,9 @@ async function runAnalysis(
     // Phase 2: 表の顔を分析
     writer.sendPhase(2);
 
-    // analyzePersona() は teammate-b が src/lib/claude.ts に実装する
+    // analyzePersona() は src/lib/claude.ts に実装
     // 動的インポートで存在しない場合もエラーにならないように
-    let analyzePersona: (input: UserInput) => Promise<import("@/types/shared").AnalysisResult>;
+    let analyzePersona: (input: UserInput, locale: Locale) => Promise<AnalysisResult>;
 
     try {
       const claudeModule = await import("@/lib/claude");
@@ -171,7 +185,7 @@ async function runAnalysis(
     // Phase 3: 裏の顔を暴く
     writer.sendPhase(3);
 
-    const result = await analyzePersona(input);
+    const result = await analyzePersona(input, locale);
 
     // Phase 4: ギャップスコア計算 → 結果送信
     writer.sendPhase(4);

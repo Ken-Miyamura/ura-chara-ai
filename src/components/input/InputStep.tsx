@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import CharCounter from "@/components/ui/CharCounter";
 import TagChips from "@/components/ui/TagChips";
+import type { Locale } from "@/i18n/config";
+import { getDictionarySync } from "@/i18n/getDictionary";
 import type { InputFieldConfig } from "@/types/shared";
 
 interface InputStepProps {
@@ -16,6 +18,7 @@ interface InputStepProps {
   isLast: boolean;
   selectedChips: string[];
   onChipToggle: (chip: string) => void;
+  locale?: Locale;
 }
 
 // 入力ウィザードの1ステップ
@@ -30,14 +33,29 @@ export default function InputStep({
   isLast,
   selectedChips,
   onChipToggle,
+  locale = "ja",
 }: InputStepProps) {
+  const dict = getDictionarySync(locale);
+
   const charCount = value.length;
   const trimmedCharCount = value.trim().length;
-  const _isValid =
-    (!config.required || trimmedCharCount >= config.minChars) && charCount <= config.maxChars;
   const canProceed = config.required
     ? trimmedCharCount >= config.minChars && charCount <= config.maxChars
     : true;
+
+  // Get localized field config
+  const fieldId = config.id;
+  const label =
+    dict.input.stepLabels[fieldId as keyof typeof dict.input.stepLabels] ?? config.label;
+  const prompt = dict.input.prompts[fieldId as keyof typeof dict.input.prompts] ?? config.prompt;
+  const placeholder =
+    dict.input.placeholders[fieldId as keyof typeof dict.input.placeholders] ?? config.placeholder;
+  const helpText =
+    dict.input.helpText[fieldId as keyof typeof dict.input.helpText] ?? config.helpText;
+  const localizedChips =
+    fieldId === "hobbies" || fieldId === "firstImpression"
+      ? dict.input.chips[fieldId as keyof typeof dict.input.chips]
+      : config.chips;
 
   return (
     <motion.div
@@ -49,13 +67,13 @@ export default function InputStep({
     >
       {/* タイトルとプロンプト */}
       <div>
-        <h2 className="text-xl font-bold mb-2">{config.label}</h2>
-        <p className="text-zinc-400 text-sm">{config.prompt}</p>
+        <h2 className="text-xl font-bold mb-2">{label}</h2>
+        <p className="text-zinc-400 text-sm">{prompt}</p>
       </div>
 
       {/* タグチップ (該当ステップのみ) */}
-      {config.chips && config.chips.length > 0 && (
-        <TagChips chips={config.chips} onChipClick={onChipToggle} selectedChips={selectedChips} />
+      {localizedChips && localizedChips.length > 0 && (
+        <TagChips chips={localizedChips} onChipClick={onChipToggle} selectedChips={selectedChips} />
       )}
 
       {/* テキストエリア */}
@@ -63,19 +81,24 @@ export default function InputStep({
         <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder={config.placeholder}
+          placeholder={placeholder}
           className="w-full min-h-[160px] bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-foreground placeholder-zinc-600 resize-y focus:outline-none focus:border-primary transition-colors"
-          maxLength={config.maxChars + 100} // 少し余裕を持たせる
+          maxLength={config.maxChars + 100}
         />
         <div className="mt-2">
-          <CharCounter current={charCount} min={config.minChars} max={config.maxChars} />
+          <CharCounter
+            current={charCount}
+            min={config.minChars}
+            max={config.maxChars}
+            locale={locale}
+          />
         </div>
       </div>
 
       {/* ヘルプテキスト */}
       <p className="text-xs text-zinc-500 flex items-start gap-1">
         <span>💡</span>
-        <span>{config.helpText}</span>
+        <span>{helpText}</span>
       </p>
 
       {/* ナビゲーションボタン */}
@@ -87,7 +110,7 @@ export default function InputStep({
             onClick={onBack}
             className="flex-1 py-3 rounded-xl border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-colors"
           >
-            戻る
+            {dict.input.buttons.back}
           </motion.button>
         )}
 
@@ -98,7 +121,7 @@ export default function InputStep({
             onClick={onSkip}
             className="flex-1 py-3 rounded-xl border border-zinc-700 text-zinc-400 hover:bg-zinc-800 transition-colors"
           >
-            スキップ →
+            {dict.input.buttons.skip}
           </motion.button>
         )}
 
@@ -113,12 +136,14 @@ export default function InputStep({
               : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
           }`}
         >
-          {isLast ? "診断する！" : "次へ →"}
+          {isLast ? dict.input.buttons.submit : dict.input.buttons.next}
         </motion.button>
       </div>
 
       {/* 必須マーク */}
-      {config.required && <p className="text-xs text-zinc-600 text-center">※ この項目は必須です</p>}
+      {config.required && (
+        <p className="text-xs text-zinc-600 text-center">{dict.input.requiredMark}</p>
+      )}
     </motion.div>
   );
 }

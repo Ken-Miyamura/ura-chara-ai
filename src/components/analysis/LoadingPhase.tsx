@@ -1,25 +1,22 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import type { Locale } from "@/i18n/config";
+import { getDictionarySync } from "@/i18n/getDictionary";
 
 interface LoadingPhaseProps {
   phase: number;
   label: string;
+  locale?: Locale;
 }
 
 // ローディングフェーズの表示 (アイコン + メッセージ + アニメーション)
 const phaseIcons = ["📡", "🎭", "🔍", "⚡"];
 
-const teaserMessages = [
-  "データの中に何かが見えてきた...",
-  "あなたの投稿から意外な一面が見えてきました...",
-  "表と裏のギャップ、思ったより大きいかも...？",
-  "もうすぐあなたの裏キャラが明らかに...",
-];
-
-export default function LoadingPhase({ phase, label }: LoadingPhaseProps) {
+export default function LoadingPhase({ phase, label, locale = "ja" }: LoadingPhaseProps) {
+  const dict = getDictionarySync(locale);
   const icon = phaseIcons[phase - 1] || "📡";
-  const teaser = teaserMessages[phase - 1] || teaserMessages[0];
+  const teaser = dict.analyzing.teaserMessages[phase - 1] || dict.analyzing.teaserMessages[0];
 
   return (
     <div className="flex flex-col items-center gap-8">

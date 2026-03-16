@@ -1,12 +1,12 @@
-// Claude API クライアントラッパー
+// Claude API クライアントラッパー (i18n対応)
 // See: docs/technical-architecture.md Section 4
 
 import Anthropic from "@anthropic-ai/sdk";
 import { API_CONFIG } from "@/lib/constants";
 import { parseAnalysisResponse } from "@/lib/parseAnalysis";
 import { ANALYSIS_RESULT_TOOL_SCHEMA, buildAnalysisPrompt } from "@/prompts/analysis";
-import { SYSTEM_PROMPT } from "@/prompts/system";
-import type { AnalysisResult, UserInput } from "@/types/shared";
+import { getSystemPrompt } from "@/prompts/system";
+import type { AnalysisResult, Locale, UserInput } from "@/types/shared";
 
 /** Claude APIクライアント（サーバーサイドのみ） */
 const anthropic = new Anthropic({
@@ -26,11 +26,16 @@ const MAX_TOKENS = API_CONFIG.claudeMaxTokens;
  * 有効なJSONを確実に取得する。
  *
  * @param input - ユーザーの入力データ
+ * @param locale - 分析に使用するロケール（デフォルト: "ja"）
  * @returns 完全なAnalysisResult（ID・タイムスタンプ付き）
  * @throws Error - API呼び出しまたはレスポンス解析に失敗した場合
  */
-export async function analyzePersona(input: UserInput): Promise<AnalysisResult> {
-  const userPrompt = buildAnalysisPrompt(input);
+export async function analyzePersona(
+  input: UserInput,
+  locale: Locale = "ja",
+): Promise<AnalysisResult> {
+  const userPrompt = buildAnalysisPrompt(input, locale);
+  const systemPrompt = getSystemPrompt(locale);
 
   // クライアントサイドUUID生成
   const id = crypto.randomUUID();
@@ -47,7 +52,7 @@ export async function analyzePersona(input: UserInput): Promise<AnalysisResult> 
         model: MODEL,
         max_tokens: MAX_TOKENS,
         temperature: TEMPERATURE,
-        system: SYSTEM_PROMPT,
+        system: systemPrompt,
         messages: [
           {
             role: "user",
@@ -75,5 +80,5 @@ export async function analyzePersona(input: UserInput): Promise<AnalysisResult> 
   }
 
   // レスポンスを解析・バリデーション
-  return parseAnalysisResponse(response, id, analyzedAt);
+  return parseAnalysisResponse(response, id, analyzedAt, locale);
 }

@@ -2,6 +2,14 @@
 // Single source of truth for all data structures.
 // See: docs/technical-architecture.md Section 3
 
+// === Locale ===
+
+/** サポートされるロケール */
+export type Locale = "ja" | "en" | "es";
+
+/** ロケールのバリデーション */
+export const SUPPORTED_LOCALES: readonly Locale[] = ["ja", "en", "es"] as const;
+
 // === User Input ===
 
 /** 入力カテゴリの識別子 */
@@ -163,6 +171,7 @@ export interface AnalyzeRequest {
   schedule: string;
   musicTaste: string;
   firstImpression: string;
+  locale?: Locale;
 }
 
 /** POST /api/analyze レスポンス (non-streaming fallback) */
@@ -174,6 +183,7 @@ export interface AnalyzeResponse {
 /** POST /api/share リクエスト */
 export interface ShareRequest {
   shareCard: ShareCardData;
+  locale?: Locale;
 }
 
 /** POST /api/share レスポンス */

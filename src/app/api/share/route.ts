@@ -1,9 +1,30 @@
 // === POST /api/share ===
-// シェアテキスト生成エンドポイント
+// シェアテキスト生成エンドポイント (i18n対応)
 
 import { type NextRequest, NextResponse } from "next/server";
-import { APP_META } from "@/lib/constants";
-import type { ShareCardData, ShareRequest, ShareResponse } from "@/types/shared";
+import type { Locale, ShareCardData, ShareRequest, ShareResponse } from "@/types/shared";
+import { SUPPORTED_LOCALES } from "@/types/shared";
+
+// === ロケール別ハッシュタグ定義 ===
+
+const HASHTAGS_BY_LOCALE: Record<Locale, readonly string[]> = {
+  ja: ["裏キャラAI", "裏キャラ診断"],
+  en: ["UraCharaAI", "PersonalityGap"],
+  es: ["UraCharaAI", "BrechaDePersonalidad"],
+} as const;
+
+// === ロケール別シェアテキストテンプレート ===
+
+type ShareTextGenerator = (shareCard: ShareCardData, hashtags: string) => string;
+
+const SHARE_TEXT_GENERATORS: Record<Locale, ShareTextGenerator> = {
+  ja: (shareCard, hashtags) =>
+    `私の裏キャラは「${shareCard.hiddenTitle}」でした！ギャップスコア: ${shareCard.gapScore}点 ${hashtags}`,
+  en: (shareCard, hashtags) =>
+    `Everyone thinks I'm "${shareCard.surfaceTitle}", but I'm really "${shareCard.hiddenTitle}". Gap Score: ${shareCard.gapScore} ${hashtags}`,
+  es: (shareCard, hashtags) =>
+    `Todos creen que soy "${shareCard.surfaceTitle}", pero en realidad soy "${shareCard.hiddenTitle}". Puntuación: ${shareCard.gapScore} ${hashtags}`,
+};
 
 /** ShareCardDataの簡易バリデーション */
 function isValidShareCard(data: unknown): data is ShareCardData {
@@ -18,10 +39,18 @@ function isValidShareCard(data: unknown): data is ShareCardData {
   );
 }
 
+/** ロケールのバリデーション。無効な値の場合は "ja" にフォールバック */
+function validateLocale(value: unknown): Locale {
+  if (typeof value === "string" && (SUPPORTED_LOCALES as readonly string[]).includes(value)) {
+    return value as Locale;
+  }
+  return "ja";
+}
+
 /** シェアテキストを生成 */
-function generateShareText(shareCard: ShareCardData): string {
-  const hashtags = APP_META.hashtags.map((tag) => `#${tag}`).join(" ");
-  return `私の裏キャラは「${shareCard.hiddenTitle}」でした！ギャップスコア: ${shareCard.gapScore}点 ${hashtags}`;
+function generateShareText(shareCard: ShareCardData, locale: Locale): string {
+  const hashtags = HASHTAGS_BY_LOCALE[locale].map((tag) => `#${tag}`).join(" ");
+  return SHARE_TEXT_GENERATORS[locale](shareCard, hashtags);
 }
 
 /** Twitter/X シェアURLを生成 */
@@ -44,8 +73,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "シェアカードのデータが不正です。" }, { status: 400 });
   }
 
-  // 3. シェアテキスト生成
-  const shareText = generateShareText(body.shareCard);
+  // 3. ロケールの取得・バリデーション
+  const locale = validateLocale(body.locale);
+
+  // 4. シェアテキスト生成
+  const shareText = generateShareText(body.shareCard, locale);
   const shareUrl = generateShareUrl(shareText);
 
   const response: ShareResponse & { shareUrl: string } = {

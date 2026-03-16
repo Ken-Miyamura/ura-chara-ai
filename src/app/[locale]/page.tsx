@@ -2,29 +2,19 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-
-// サンプル結果カード（ランディングページ用ティーザー）
-const sampleCards = [
-  {
-    surface: { emoji: "✨", title: "意識高い系カフェワーカー" },
-    hidden: { emoji: "🛋️", title: "布団から出たくないインドア廃人" },
-    score: 74,
-  },
-  {
-    surface: { emoji: "😊", title: "笑顔のムードメーカー" },
-    hidden: { emoji: "🌙", title: "深夜のWikipedia探検家" },
-    score: 68,
-  },
-  {
-    surface: { emoji: "💪", title: "ストイック筋トレマン" },
-    hidden: { emoji: "🍜", title: "3日に1回しか料理しないズボラ飯民" },
-    score: 82,
-  },
-];
+import type { Locale } from "@/i18n/config";
+import { getDictionarySync } from "@/i18n/getDictionary";
 
 export default function LandingPage() {
+  const params = useParams();
+  const locale = (params.locale as Locale) ?? "ja";
+  const dict = getDictionarySync(locale);
+
+  const sampleCards = dict.landing.sampleCards;
+
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
       {/* 背景エフェクト */}
@@ -48,7 +38,7 @@ export default function LandingPage() {
         />
       </div>
 
-      <Header />
+      <Header locale={locale} />
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 pt-20 pb-8 relative z-10">
         {/* ヒーローセクション */}
@@ -58,7 +48,7 @@ export default function LandingPage() {
           transition={{ duration: 0.8 }}
           className="text-center max-w-lg mx-auto"
         >
-          {/* アプリタイトル（グリッチ風グラデーション） */}
+          {/* アプリタイトル */}
           <motion.h1
             className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary-light via-accent to-neon-pink bg-clip-text text-transparent"
             animate={{
@@ -67,7 +57,7 @@ export default function LandingPage() {
             transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
             style={{ backgroundSize: "200% 200%" }}
           >
-            裏キャラ AI
+            {dict.landing.headline}
           </motion.h1>
 
           {/* キャッチコピー */}
@@ -77,7 +67,7 @@ export default function LandingPage() {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-xl md:text-2xl font-medium mb-4 text-foreground"
           >
-            あなたの「裏の顔」、暴いてみない？
+            {dict.landing.subheadline}
           </motion.p>
 
           {/* サブヘッドライン */}
@@ -85,11 +75,9 @@ export default function LandingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className="text-sm md:text-base text-zinc-400 mb-8 leading-relaxed"
+            className="text-sm md:text-base text-zinc-400 mb-8 leading-relaxed whitespace-pre-line"
           >
-            SNSの投稿、趣味、音楽の好み...
-            <br />
-            AIがあなたの「表の顔」と「裏の顔」のギャップを暴きます。
+            {dict.landing.description}
           </motion.p>
 
           {/* CTAボタン */}
@@ -98,7 +86,7 @@ export default function LandingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.5 }}
           >
-            <Link href="/input">
+            <Link href={`/${locale}/input`}>
               <motion.button
                 className="px-10 py-4 text-lg font-bold rounded-2xl bg-gradient-to-r from-primary to-accent text-white relative overflow-hidden"
                 whileHover={{ scale: 1.05 }}
@@ -118,7 +106,7 @@ export default function LandingPage() {
                   },
                 }}
               >
-                裏キャラ診断スタート 👉
+                {dict.landing.cta}
               </motion.button>
             </Link>
           </motion.div>
@@ -130,11 +118,11 @@ export default function LandingPage() {
             transition={{ delay: 1, duration: 0.5 }}
             className="text-xs text-zinc-500 mt-4"
           >
-            所要時間：約3分
+            {dict.landing.timeEstimate}
           </motion.p>
         </motion.div>
 
-        {/* サンプル結果カード（ティーザー） */}
+        {/* サンプル結果カード */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -153,13 +141,13 @@ export default function LandingPage() {
                 <div className="rounded-xl border border-zinc-800 bg-zinc-900/80 p-4 backdrop-blur-sm">
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <span className="text-xs text-amber-400">表の顔</span>
+                      <span className="text-xs text-amber-400">{dict.landing.surfaceLabel}</span>
                       <p className="text-sm font-medium">
                         {card.surface.emoji} {card.surface.title}
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className="text-xs text-purple-400">裏の顔</span>
+                      <span className="text-xs text-purple-400">{dict.landing.hiddenLabel}</span>
                       <p className="text-sm font-medium">
                         {card.hidden.emoji} {card.hidden.title}
                       </p>
@@ -183,11 +171,11 @@ export default function LandingPage() {
           transition={{ delay: 2, duration: 0.5 }}
           className="text-xs text-zinc-600 mt-8 text-center"
         >
-          🔒 データは保存されません。診断後に自動削除。
+          {dict.landing.trustSignal}
         </motion.p>
       </main>
 
-      <Footer />
+      <Footer locale={locale} />
     </div>
   );
 }

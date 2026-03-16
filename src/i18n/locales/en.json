@@ -1,0 +1,204 @@
+{
+  "landing": {
+    "headline": "UraChara AI",
+    "subheadline": "Ready to expose your hidden side?",
+    "description": "Your SNS posts, hobbies, music taste...\nAI reveals the gap between your public face and your secret self.",
+    "cta": "Start Your Diagnosis 👉",
+    "timeEstimate": "Takes about 3 minutes",
+    "trustSignal": "🔒 No data stored. Auto-deleted after diagnosis.",
+    "sampleCards": [
+      {
+        "surface": { "emoji": "✨", "title": "Aspirational Cafe Worker" },
+        "hidden": { "emoji": "🛋️", "title": "Couch Potato Who Can't Leave Bed" },
+        "score": 74
+      },
+      {
+        "surface": { "emoji": "😊", "title": "Smiley Mood Maker" },
+        "hidden": { "emoji": "🌙", "title": "Late-Night Wikipedia Explorer" },
+        "score": 68
+      },
+      {
+        "surface": { "emoji": "💪", "title": "Hardcore Gym Bro" },
+        "hidden": { "emoji": "🍜", "title": "Only Cooks Once Every 3 Days" },
+        "score": 82
+      }
+    ],
+    "surfaceLabel": "Public Face",
+    "hiddenLabel": "Hidden Face"
+  },
+  "input": {
+    "stepLabels": {
+      "snsContent": "📱 SNS Posts",
+      "hobbies": "🎯 Hobbies & Interests",
+      "schedule": "🕐 Daily Schedule",
+      "musicTaste": "🎵 Music Taste",
+      "firstImpression": "👤 First Impressions"
+    },
+    "prompts": {
+      "snsContent": "Copy-paste your recent SNS posts. Twitter, Instagram, anything goes!",
+      "hobbies": "Tell us what you're into, what you love!",
+      "schedule": "Walk us through your typical day.",
+      "musicTaste": "What artists or songs do you listen to?",
+      "firstImpression": "How do you think people see you?"
+    },
+    "placeholders": {
+      "snsContent": "e.g.: Working from a cafe today ☕ / Weekend drinks with friends 🍻 / This movie made me cry 😭",
+      "hobbies": "e.g.: Into solo camping lately. Binge-watching K-dramas on Netflix. Weekend gym sessions.",
+      "schedule": "e.g.: Wake up 7am → packed train → work 9-6 → gym → home → fall asleep watching YouTube",
+      "musicTaste": "e.g.: Taylor Swift, The Weeknd, Doja Cat. Late night lo-fi playlists. Secretly love anime OSTs.",
+      "firstImpression": "e.g.: People say I'm \"put together\" but I'm actually scrambling every morning."
+    },
+    "helpText": {
+      "snsContent": "5-10 posts is ideal. More posts = better accuracy!",
+      "hobbies": "Public hobbies AND secret guilty pleasures — write them all!",
+      "schedule": "Your REAL day, not your ideal one!",
+      "musicTaste": "Genres, artists, playlist vibes — anything goes!",
+      "firstImpression": "Things people often say about you, nicknames, first impressions, etc."
+    },
+    "chips": {
+      "hobbies": [
+        "Anime",
+        "Gaming",
+        "Reading",
+        "Gym",
+        "Cooking",
+        "Travel",
+        "Photography",
+        "Fandom",
+        "DIY",
+        "Investing"
+      ],
+      "firstImpression": [
+        "Responsible",
+        "Airhead",
+        "Cheerful",
+        "Cool",
+        "Serious",
+        "Quirky",
+        "Comic Relief",
+        "Good Listener"
+      ]
+    },
+    "buttons": {
+      "next": "Next →",
+      "back": "Back",
+      "skip": "Skip →",
+      "submit": "Diagnose me!"
+    },
+    "requiredMark": "* This field is required",
+    "charCounter": {
+      "unit": "chars",
+      "belowMin": "{remaining} more chars needed",
+      "overMax": "Too many characters!"
+    },
+    "validationErrors": {
+      "snsContentRequired": "SNS posts are required! They're the key to finding your hidden self!",
+      "hobbiesRequired": "Hobbies are required! We can't find your hidden side without knowing what you love!",
+      "defaultRequired": "This field is required.",
+      "snsContentMinLength": "Write a bit more so we can find your hidden self! ({remaining} more chars)",
+      "hobbiesMinLength": "Tell us more about your hobbies! ({remaining} more chars)",
+      "defaultMinLength": "Minimum {min} characters required. (Currently {current} chars)",
+      "maxLength": "Keep it under {max} characters! (Currently {current} chars)"
+    }
+  },
+  "analyzing": {
+    "phaseLabels": {
+      "1": "Loading your data...",
+      "2": "Analyzing your public face...",
+      "3": "Exposing your hidden side...",
+      "4": "Calculating gap score..."
+    },
+    "teaserMessages": [
+      "Something's emerging from your data...",
+      "Your posts reveal a surprising side...",
+      "The gap might be bigger than you think...?",
+      "Your hidden self is about to be revealed..."
+    ]
+  },
+  "result": {
+    "introText": "Your diagnosis result...",
+    "transitionText": "But actually...",
+    "surfaceLabel": "Public Face",
+    "hiddenLabel": "Hidden Face",
+    "evidenceTitle": "Evidence from your data:",
+    "gapScoreTitle": "GAP SCORE",
+    "gapDetailTitle": "── Gap Details ──",
+    "gapLabel": "Gap",
+    "surprisingFindingTitle": "── Surprising Finding ──",
+    "shareButton": "Share your results",
+    "retryButton": "Try again",
+    "loading": "Loading..."
+  },
+  "share": {
+    "title": "Share Card",
+    "surfaceLabel": "Public Face",
+    "hiddenLabel": "Hidden Face",
+    "gapScoreLabel": "GAP SCORE",
+    "footerCta": "Want to try it yourself?",
+    "hashtag": "#UraCharaAI",
+    "twitterButton": "Share on Twitter",
+    "downloadButton": "Save image",
+    "downloadingButton": "Generating image...",
+    "retryButton": "Try again",
+    "shareTextTemplate": "My hidden persona is \"{hiddenTitle}\"! Gap Score: {gapScore} pts"
+  },
+  "common": {
+    "appName": "UraChara AI",
+    "footer": {
+      "privacy": "No data stored. Auto-deleted after diagnosis.",
+      "copyright": "© 2026 UraChara AI"
+    },
+    "errorTitle": "Oops, something broke...",
+    "retryButton": "Let's try again 🔄",
+    "apiErrors": {
+      "rateLimited": "Too many requests. Please wait a moment and try again.",
+      "invalidRequest": "Invalid request format.",
+      "validationFailed": "There's a problem with your input.",
+      "unknown": "An unknown error occurred",
+      "analysisNotReady": "Analysis feature is getting ready. Please wait a moment.",
+      "analysisFailed": "An error occurred during analysis.",
+      "unexpectedError": "An unexpected error occurred.",
+      "resultNotFound": "Analysis result not found. Please try again.",
+      "lostInSearch": "We got lost while searching for your hidden self... Let's try again!",
+      "shareCardInvalid": "Share card data is invalid."
+    }
+  },
+  "meta": {
+    "appName": "UraChara AI",
+    "tagline": "We're about to expose your hidden character.",
+    "title": "UraChara AI - Ready to expose your hidden side?",
+    "description": "Your SNS posts, hobbies, music taste... AI reveals the gap between your public face and your secret self.",
+    "ogTitle": "UraChara AI",
+    "ogDescription": "Ready to expose your hidden side?",
+    "hashtags": ["UraCharaAI", "HiddenPersonality"]
+  },
+  "traits": {
+    "sociability": "Sociability",
+    "drive": "Drive",
+    "sensitivity": "Sensitivity",
+    "logic": "Logic",
+    "assertiveness": "Assertiveness"
+  },
+  "gapLevels": {
+    "honest": {
+      "label": "Open Book",
+      "description": "What you see is what you get. Barely any gap."
+    },
+    "slight": {
+      "label": "Slight Gap",
+      "description": "A small gap — you adapt subtly to your surroundings."
+    },
+    "dual": {
+      "label": "Double Life",
+      "description": "You know how to read the room. Two distinct sides."
+    },
+    "moe": {
+      "label": "Gap Appeal",
+      "description": "Major gap between your public and private self. The contrast is charming."
+    },
+    "extreme": {
+      "label": "Totally Different Person",
+      "description": "Your public and private selves are total strangers. Double agent vibes."
+    }
+  }
+}
