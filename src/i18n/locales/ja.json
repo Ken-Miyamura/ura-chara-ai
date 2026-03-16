@@ -1,0 +1,184 @@
+{
+  "landing": {
+    "headline": "裏キャラ AI",
+    "subheadline": "あなたの「裏の顔」、暴いてみない？",
+    "description": "SNSの投稿、趣味、音楽の好み...\nAIがあなたの「表の顔」と「裏の顔」のギャップを暴きます。",
+    "cta": "裏キャラ診断スタート 👉",
+    "timeEstimate": "所要時間：約3分",
+    "trustSignal": "🔒 データは保存されません。診断後に自動削除。",
+    "sampleCards": [
+      {
+        "surface": { "emoji": "✨", "title": "意識高い系カフェワーカー" },
+        "hidden": { "emoji": "🛋️", "title": "布団から出たくないインドア廃人" },
+        "score": 74
+      },
+      {
+        "surface": { "emoji": "😊", "title": "笑顔のムードメーカー" },
+        "hidden": { "emoji": "🌙", "title": "深夜のWikipedia探検家" },
+        "score": 68
+      },
+      {
+        "surface": { "emoji": "💪", "title": "ストイック筋トレマン" },
+        "hidden": { "emoji": "🍜", "title": "3日に1回しか料理しないズボラ飯民" },
+        "score": 82
+      }
+    ],
+    "surfaceLabel": "表の顔",
+    "hiddenLabel": "裏の顔"
+  },
+  "input": {
+    "stepLabels": {
+      "snsContent": "📱 SNS投稿",
+      "hobbies": "🎯 趣味・興味",
+      "schedule": "🕐 1日のスケジュール",
+      "musicTaste": "🎵 音楽の好み",
+      "firstImpression": "👤 第一印象"
+    },
+    "prompts": {
+      "snsContent": "最近のSNS投稿をコピペしてください。Twitter、Instagram、なんでもOK！",
+      "hobbies": "ハマっていること、好きなこと、教えてください！",
+      "schedule": "典型的な1日の過ごし方を教えてください。",
+      "musicTaste": "よく聴くアーティストや曲を教えてください！",
+      "firstImpression": "周りの人にどう思われてると感じますか？"
+    },
+    "placeholders": {
+      "snsContent": "例：今日もカフェで仕事なう☕ / 週末は友達と渋谷で飲み🍻 / この映画マジで泣いた😭",
+      "hobbies": "例：最近はソロキャンプにハマってる。あとNetflixで韓ドラ見まくり。週末は筋トレ。",
+      "schedule": "例：7時起床→満員電車→9-18時仕事→ジム→帰宅→YouTube見ながら寝落ち",
+      "musicTaste": "例：YOASOBI、King Gnu、藤井風。深夜はCity Popとか聴いてる。Spotifyのプレイリストはほぼアニソン。",
+      "firstImpression": "例：よく「しっかりしてるね」って言われるけど、実は毎朝ギリギリで家出てる。"
+    },
+    "helpText": {
+      "snsContent": "5〜10投稿分くらいがベスト。多いほど精度UP！",
+      "hobbies": "人に言う趣味も、こっそりな趣味も、全部書いてOK！",
+      "schedule": "リアルな過ごし方でOK。「理想の1日」じゃなくて「実際の1日」を！",
+      "musicTaste": "ジャンル、アーティスト名、プレイリストの雰囲気、なんでもOK",
+      "firstImpression": "よく言われること、よく使われるあだ名、第一印象で言われたことなど"
+    },
+    "chips": {
+      "hobbies": ["アニメ", "ゲーム", "読書", "筋トレ", "料理", "旅行", "カメラ", "推し活", "DIY", "投資"],
+      "firstImpression": ["しっかり者", "天然", "明るい", "クール", "真面目", "不思議ちゃん", "いじられキャラ", "聞き上手"]
+    },
+    "buttons": {
+      "next": "次へ →",
+      "back": "戻る",
+      "skip": "スキップ →",
+      "submit": "診断する！"
+    },
+    "requiredMark": "※ この項目は必須です",
+    "charCounter": {
+      "unit": "文字",
+      "belowMin": "あと{remaining}文字以上書いてね",
+      "overMax": "文字数オーバー！"
+    },
+    "validationErrors": {
+      "snsContentRequired": "SNS投稿は必須だよ！裏キャラを見つけるための大事なデータ！",
+      "hobbiesRequired": "趣味・興味は必須！好きなことを教えてくれないと裏キャラが見つけられないよ！",
+      "defaultRequired": "この項目は必須です。",
+      "snsContentMinLength": "もうちょっと書いてくれないと、裏キャラ見つけられないよ！（あと{remaining}文字）",
+      "hobbiesMinLength": "もう少し趣味を教えて！（あと{remaining}文字）",
+      "defaultMinLength": "最低{min}文字必要です。（現在{current}文字）",
+      "maxLength": "{max}文字以内にしてね！（現在{current}文字）"
+    }
+  },
+  "analyzing": {
+    "phaseLabels": {
+      "1": "データを読み込み中...",
+      "2": "表の顔を分析中...",
+      "3": "裏の顔を暴き中...",
+      "4": "ギャップスコアを計算中..."
+    },
+    "teaserMessages": [
+      "データの中に何かが見えてきた...",
+      "あなたの投稿から意外な一面が見えてきました...",
+      "表と裏のギャップ、思ったより大きいかも...？",
+      "もうすぐあなたの裏キャラが明らかに..."
+    ]
+  },
+  "result": {
+    "introText": "あなたの診断結果...",
+    "transitionText": "でも、本当は...",
+    "surfaceLabel": "表の顔",
+    "hiddenLabel": "裏の顔",
+    "evidenceTitle": "根拠となったデータ:",
+    "gapScoreTitle": "ギャップスコア",
+    "gapDetailTitle": "── ギャップ詳細 ──",
+    "gapLabel": "ギャップ",
+    "surprisingFindingTitle": "── 意外な発見 ──",
+    "shareButton": "結果をシェアする",
+    "retryButton": "もう一度診断する",
+    "loading": "読み込み中..."
+  },
+  "share": {
+    "title": "シェアカード",
+    "surfaceLabel": "表の顔",
+    "hiddenLabel": "裏の顔",
+    "gapScoreLabel": "GAP SCORE",
+    "footerCta": "あなたも診断してみる？",
+    "hashtag": "#裏キャラAI",
+    "twitterButton": "Twitterでシェア",
+    "downloadButton": "画像を保存",
+    "downloadingButton": "画像を生成中...",
+    "retryButton": "もう一度診断する",
+    "shareTextTemplate": "私の裏キャラは「{hiddenTitle}」でした！ギャップスコア: {gapScore}点"
+  },
+  "common": {
+    "appName": "裏キャラ AI",
+    "footer": {
+      "privacy": "データは保存されません。診断後に自動削除。",
+      "copyright": "© 2026 裏キャラ AI"
+    },
+    "errorTitle": "あれ、エラーだ...",
+    "retryButton": "もう一回やってみる 🔄",
+    "apiErrors": {
+      "rateLimited": "混み合っています。しばらく待ってからもう一度お試しください。",
+      "invalidRequest": "リクエストの形式が正しくありません。",
+      "validationFailed": "入力内容に問題があります。",
+      "unknown": "不明なエラーが発生しました",
+      "analysisNotReady": "分析機能は現在準備中です。もう少しお待ちください。",
+      "analysisFailed": "分析中にエラーが発生しました。",
+      "unexpectedError": "予期しないエラーが発生しました。",
+      "resultNotFound": "分析結果が見つかりませんでした。もう一度お試しください。",
+      "lostInSearch": "裏キャラの探索中に迷子になっちゃった...もう一回やってみて！",
+      "shareCardInvalid": "シェアカードのデータが不正です。"
+    }
+  },
+  "meta": {
+    "appName": "裏キャラAI",
+    "tagline": "あなたの裏キャラ、暴いちゃいます。",
+    "title": "裏キャラ AI - あなたの裏の顔、暴いてみない？",
+    "description": "SNSの投稿、趣味、音楽の好み...AIがあなたの「表の顔」と「裏の顔」のギャップを暴きます。",
+    "ogTitle": "裏キャラ AI",
+    "ogDescription": "あなたの裏の顔、暴いてみない？",
+    "hashtags": ["裏キャラAI", "裏キャラ診断"]
+  },
+  "traits": {
+    "sociability": "社交性",
+    "drive": "行動力",
+    "sensitivity": "感受性",
+    "logic": "論理性",
+    "assertiveness": "自己主張"
+  },
+  "gapLevels": {
+    "honest": {
+      "label": "素直タイプ",
+      "description": "表も裏もほぼ同じ。What you see is what you get."
+    },
+    "slight": {
+      "label": "ちょいギャップ",
+      "description": "ちょっとだけ裏がある。場に合わせて微妙に変わるタイプ。"
+    },
+    "dual": {
+      "label": "二面性あり",
+      "description": "空気を読むのが得意。2つの顔を使い分けてる。"
+    },
+    "moe": {
+      "label": "ギャップ萌えタイプ",
+      "description": "表と裏の差がすごい。そのギャップが魅力になってる。"
+    },
+    "extreme": {
+      "label": "完全に別人タイプ",
+      "description": "表の自分と裏の自分、もはや別人。二重人格レベル。"
+    }
+  }
+}
