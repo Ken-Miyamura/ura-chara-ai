@@ -97,7 +97,7 @@ export function useAnalysis(locale: Locale = "ja"): UseAnalysisReturn {
         const response = await fetch("/api/analyze", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(input),
+          body: JSON.stringify({ ...input, locale }),
           signal: controller.signal,
         });
 
