@@ -1,6 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { Locale } from "@/i18n/config";
+import { getDictionarySync } from "@/i18n/getDictionary";
 
 interface PersonaCardProps {
   type: "surface" | "hidden";
@@ -10,9 +12,9 @@ interface PersonaCardProps {
   summary: string;
   keywords: string[];
   delay?: number;
+  locale?: Locale;
 }
 
-// ペルソナカード (表の顔 or 裏の顔)
 export default function PersonaCard({
   type,
   emoji,
@@ -21,7 +23,9 @@ export default function PersonaCard({
   summary,
   keywords,
   delay = 0,
+  locale = "ja",
 }: PersonaCardProps) {
+  const dict = getDictionarySync(locale);
   const isSurface = type === "surface";
 
   return (
@@ -42,7 +46,7 @@ export default function PersonaCard({
             isSurface ? "bg-amber-200/50 text-amber-700" : "bg-purple-500/20 text-purple-300"
           }`}
         >
-          {isSurface ? "表の顔" : "裏の顔"}
+          {isSurface ? dict.result.surfaceLabel : dict.result.hiddenLabel}
         </span>
       </div>
 

@@ -2,15 +2,23 @@
 
 import { motion } from "framer-motion";
 import TraitBar from "@/components/ui/TraitBar";
+import type { Locale } from "@/i18n/config";
+import { getDictionarySync } from "@/i18n/getDictionary";
 import type { TraitComparison } from "@/types/shared";
 
 interface TraitComparisonListProps {
   comparisons: TraitComparison[];
   delay?: number;
+  locale?: Locale;
 }
 
-// 5つのトレイト比較リスト
-export default function TraitComparisonList({ comparisons, delay = 0 }: TraitComparisonListProps) {
+export default function TraitComparisonList({
+  comparisons,
+  delay = 0,
+  locale = "ja",
+}: TraitComparisonListProps) {
+  const dict = getDictionarySync(locale);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -18,7 +26,9 @@ export default function TraitComparisonList({ comparisons, delay = 0 }: TraitCom
       transition={{ duration: 0.5, delay }}
       className="space-y-6"
     >
-      <h3 className="text-center text-sm text-zinc-400 tracking-wider">── ギャップ詳細 ──</h3>
+      <h3 className="text-center text-sm text-zinc-400 tracking-wider">
+        {dict.result.gapDetailTitle}
+      </h3>
 
       <div className="space-y-5">
         {comparisons.map((comparison, index) => (
@@ -39,7 +49,7 @@ export default function TraitComparisonList({ comparisons, delay = 0 }: TraitCom
                 transition={{ delay: delay + 0.8 + index * 0.15 }}
                 className="text-xs text-zinc-500 ml-7"
               >
-                ギャップ: {comparison.gap}pt
+                {dict.result.gapLabel}: {comparison.gap}pt
               </motion.p>
             )}
           </div>

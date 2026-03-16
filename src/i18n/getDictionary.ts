@@ -1,10 +1,9 @@
 // === i18n Dictionary Loader ===
 
 import type { Locale } from "./config";
-
-import jaDict from "./locales/ja.json";
 import enDict from "./locales/en.json";
 import esDict from "./locales/es.json";
+import jaDict from "./locales/ja.json";
 
 export type Dictionary = typeof jaDict;
 

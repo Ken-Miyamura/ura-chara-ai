@@ -1,13 +1,15 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
 import GapScoreDisplay from "@/components/result/GapScoreDisplay";
 import PersonaCard from "@/components/result/PersonaCard";
 import TraitComparisonList from "@/components/result/TraitComparisonList";
 import ShareButton from "@/components/share/ShareButton";
+import type { Locale } from "@/i18n/config";
+import { getDictionarySync } from "@/i18n/getDictionary";
 import type { AnalysisResult } from "@/types/shared";
 
 // 演出シーケンスの各フェーズ
@@ -23,6 +25,10 @@ type RevealPhase =
 
 export default function ResultPage() {
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as Locale) ?? "ja";
+  const dict = getDictionarySync(locale);
+
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [revealPhase, setRevealPhase] = useState<RevealPhase>("dark");
 
@@ -30,7 +36,7 @@ export default function ResultPage() {
   useEffect(() => {
     const stored = sessionStorage.getItem("uraCharaResult");
     if (!stored) {
-      router.push("/");
+      router.push(`/${locale}`);
       return;
     }
 
@@ -38,9 +44,9 @@ export default function ResultPage() {
       const parsed = JSON.parse(stored) as AnalysisResult;
       setResult(parsed);
     } catch {
-      router.push("/");
+      router.push(`/${locale}`);
     }
-  }, [router]);
+  }, [router, locale]);
 
   // 演出シーケンス
   useEffect(() => {
@@ -66,7 +72,7 @@ export default function ResultPage() {
   if (!result) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-zinc-500">読み込み中...</div>
+        <div className="text-zinc-500">{dict.result.loading}</div>
       </div>
     );
   }
@@ -84,7 +90,7 @@ export default function ResultPage() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      <Header />
+      <Header locale={locale} />
 
       <main className="max-w-lg mx-auto px-4 pt-20 pb-32">
         <AnimatePresence>
@@ -112,7 +118,7 @@ export default function ResultPage() {
                 transition={{ duration: 0.8 }}
                 className="text-lg text-zinc-400"
               >
-                あなたの診断結果...
+                {dict.result.introText}
               </motion.p>
             </motion.div>
           )}
@@ -128,6 +134,7 @@ export default function ResultPage() {
                 summary={result.surface.summary}
                 keywords={[]}
                 delay={0}
+                locale={locale}
               />
             </div>
           )}
@@ -142,7 +149,7 @@ export default function ResultPage() {
               className="text-center my-8"
             >
               <p className="text-2xl font-bold bg-gradient-to-r from-primary-light to-accent bg-clip-text text-transparent">
-                でも、本当は...
+                {dict.result.transitionText}
               </p>
             </motion.div>
           )}
@@ -158,6 +165,7 @@ export default function ResultPage() {
                 summary={result.hidden.summary}
                 keywords={[]}
                 delay={0}
+                locale={locale}
               />
 
               {/* 根拠 */}
@@ -168,7 +176,7 @@ export default function ResultPage() {
                   transition={{ delay: 0.5 }}
                   className="mt-4 p-4 rounded-xl bg-zinc-900/50 border border-zinc-800"
                 >
-                  <p className="text-xs text-zinc-500 mb-2">根拠となったデータ:</p>
+                  <p className="text-xs text-zinc-500 mb-2">{dict.result.evidenceTitle}</p>
                   <ul className="space-y-1">
                     {result.hidden.evidence.map((ev, i) => (
                       <li key={i} className="text-xs text-zinc-400">
@@ -190,6 +198,7 @@ export default function ResultPage() {
                 levelLabel={result.gap.gapLevelLabel}
                 aiComment={result.gap.aiComment}
                 delay={0}
+                locale={locale}
               />
             </div>
           )}
@@ -197,7 +206,11 @@ export default function ResultPage() {
           {/* Phase 7: Trait comparisons */}
           {phaseIndex >= 6 && (
             <div key="traits" className="my-12">
-              <TraitComparisonList comparisons={result.gap.traitComparisons} delay={0} />
+              <TraitComparisonList
+                comparisons={result.gap.traitComparisons}
+                delay={0}
+                locale={locale}
+              />
 
               {/* 意外な発見 */}
               <motion.div
@@ -206,7 +219,7 @@ export default function ResultPage() {
                 transition={{ delay: 1 }}
                 className="mt-8 p-5 rounded-xl bg-gradient-to-br from-purple-950/50 to-pink-950/50 border border-purple-500/20"
               >
-                <h4 className="text-sm text-zinc-400 mb-2">── 意外な発見 ──</h4>
+                <h4 className="text-sm text-zinc-400 mb-2">{dict.result.surprisingFindingTitle}</h4>
                 <p className="text-sm text-zinc-300 leading-relaxed">
                   {result.gap.surprisingFinding}
                 </p>
@@ -224,8 +237,8 @@ export default function ResultPage() {
               className="space-y-4"
             >
               <ShareButton
-                onClick={() => router.push("/share")}
-                label="結果をシェアする"
+                onClick={() => router.push(`/${locale}/share`)}
+                label={dict.result.shareButton}
                 icon="📤"
                 variant="primary"
               />
@@ -234,9 +247,9 @@ export default function ResultPage() {
                 onClick={() => {
                   sessionStorage.removeItem("uraCharaResult");
                   sessionStorage.removeItem("uraCharaInput");
-                  router.push("/input");
+                  router.push(`/${locale}/input`);
                 }}
-                label="もう一度診断する"
+                label={dict.result.retryButton}
                 icon="🔄"
                 variant="secondary"
               />

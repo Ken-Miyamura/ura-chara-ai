@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { PHASE_LABELS } from "@/lib/constants";
+import type { Locale } from "@/i18n/config";
+import { getDictionarySync } from "@/i18n/getDictionary";
 import { readSSEStream } from "@/lib/streamHandler";
 import type { AnalysisPhase, AnalysisResult, TypedStreamEvent, UserInput } from "@/types/shared";
 
@@ -25,7 +26,8 @@ interface UseAnalysisReturn {
   isAnalyzing: boolean;
 }
 
-export function useAnalysis(): UseAnalysisReturn {
+export function useAnalysis(locale: Locale = "ja"): UseAnalysisReturn {
+  const dict = getDictionarySync(locale);
   const [status, setStatus] = useState<AnalysisStatus>("idle");
   const [phase, setPhase] = useState<AnalysisPhase>(1);
   const [result, setResult] = useState<AnalysisResult | null>(null);
@@ -40,6 +42,15 @@ export function useAnalysis(): UseAnalysisReturn {
       if (abortRef.current) abortRef.current.abort();
     };
   }, []);
+
+  // Get phase label from dictionary
+  const getPhaseLabel = useCallback(
+    (p: AnalysisPhase): string => {
+      const key = String(p) as keyof typeof dict.analyzing.phaseLabels;
+      return dict.analyzing.phaseLabels[key] ?? "";
+    },
+    [dict],
+  );
 
   // 時間ベースのフェーズ進行
   const startPhaseTimer = useCallback(() => {
@@ -57,10 +68,9 @@ export function useAnalysis(): UseAnalysisReturn {
           advancePhase();
         }, delay);
       }
-      // Phase 4以降はループ（15秒超の場合）
       if (phaseIndex >= PHASE_TIMINGS.length) {
         phaseTimerRef.current = setTimeout(() => {
-          phaseIndex = 1; // Phase 2に戻る
+          phaseIndex = 1;
           setPhase(2);
           advancePhase();
         }, 5000);
@@ -78,10 +88,8 @@ export function useAnalysis(): UseAnalysisReturn {
       setResult(null);
       setPhase(1);
 
-      // フェーズタイマー開始
       startPhaseTimer();
 
-      // APIリクエスト
       const controller = new AbortController();
       abortRef.current = controller;
 
@@ -96,11 +104,10 @@ export function useAnalysis(): UseAnalysisReturn {
         if (!response.ok) {
           const errorData = await response
             .json()
-            .catch(() => ({ error: "不明なエラーが発生しました" }));
+            .catch(() => ({ error: dict.common.apiErrors.unknown }));
           throw new Error((errorData as { error?: string }).error || `HTTP ${response.status}`);
         }
 
-        // SSEストリーム処理 (readSSEStream で TypedStreamEvent を正しくパース)
         let analysisHandled = false;
 
         await readSSEStream(response, (typed: TypedStreamEvent) => {
@@ -118,37 +125,34 @@ export function useAnalysis(): UseAnalysisReturn {
           if (event.status === "error") {
             analysisHandled = true;
             if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
-            setError(event.error || "分析中にエラーが発生しました");
+            setError(event.error || dict.common.apiErrors.analysisFailed);
             setStatus("error");
           }
         });
 
-        // ストリーム完了したが結果もエラーも取得できなかった場合
         if (!analysisHandled) {
-          throw new Error("分析結果が見つかりませんでした。もう一度お試しください。");
+          throw new Error(dict.common.apiErrors.resultNotFound);
         }
       } catch (err) {
         if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
 
         if (err instanceof Error && err.name === "AbortError") {
-          return; // キャンセルは無視
+          return;
         }
 
         const errorMessage =
-          err instanceof Error
-            ? err.message
-            : "裏キャラの探索中に迷子になっちゃった...もう一回やってみて！";
+          err instanceof Error ? err.message : dict.common.apiErrors.lostInSearch;
         setError(errorMessage);
         setStatus("error");
       }
     },
-    [startPhaseTimer],
+    [startPhaseTimer, dict],
   );
 
   return {
     startAnalysis,
     phase,
-    phaseLabel: PHASE_LABELS[phase],
+    phaseLabel: getPhaseLabel(phase),
     result,
     error,
     status,

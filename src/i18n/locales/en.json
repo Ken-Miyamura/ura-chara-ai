@@ -56,8 +56,28 @@
       "firstImpression": "Things people often say about you, nicknames, first impressions, etc."
     },
     "chips": {
-      "hobbies": ["Anime", "Gaming", "Reading", "Gym", "Cooking", "Travel", "Photography", "Fandom", "DIY", "Investing"],
-      "firstImpression": ["Responsible", "Airhead", "Cheerful", "Cool", "Serious", "Quirky", "Comic Relief", "Good Listener"]
+      "hobbies": [
+        "Anime",
+        "Gaming",
+        "Reading",
+        "Gym",
+        "Cooking",
+        "Travel",
+        "Photography",
+        "Fandom",
+        "DIY",
+        "Investing"
+      ],
+      "firstImpression": [
+        "Responsible",
+        "Airhead",
+        "Cheerful",
+        "Cool",
+        "Serious",
+        "Quirky",
+        "Comic Relief",
+        "Good Listener"
+      ]
     },
     "buttons": {
       "next": "Next →",

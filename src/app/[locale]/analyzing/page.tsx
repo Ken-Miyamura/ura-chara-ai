@@ -1,11 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import LoadingPhase from "@/components/analysis/LoadingPhase";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useAnalysis } from "@/hooks/useAnalysis";
+import type { Locale } from "@/i18n/config";
 import type { UserInput } from "@/types/shared";
 
 // パーティクルの固定位置（ハイドレーションエラー回避）
@@ -29,7 +30,9 @@ const PARTICLE_POSITIONS = [
 
 export default function AnalyzingPage() {
   const router = useRouter();
-  const { startAnalysis, phase, phaseLabel, result, error, status } = useAnalysis();
+  const params = useParams();
+  const locale = (params.locale as Locale) ?? "ja";
+  const { startAnalysis, phase, phaseLabel, result, error, status } = useAnalysis(locale);
   const hasStarted = useRef(false);
 
   // マウント時にsessionStorageからデータ取得して分析開始
@@ -39,7 +42,7 @@ export default function AnalyzingPage() {
 
     const stored = sessionStorage.getItem("uraCharaInput");
     if (!stored) {
-      router.push("/input");
+      router.push(`/${locale}/input`);
       return;
     }
 
@@ -47,21 +50,20 @@ export default function AnalyzingPage() {
       const input = JSON.parse(stored) as UserInput;
       startAnalysis(input);
     } catch {
-      router.push("/input");
+      router.push(`/${locale}/input`);
     }
-  }, [startAnalysis, router]);
+  }, [startAnalysis, router, locale]);
 
   // 分析完了時に結果ページへ遷移
   useEffect(() => {
     if (status === "complete" && result) {
       sessionStorage.setItem("uraCharaResult", JSON.stringify(result));
-      // 少し待ってから遷移（最後のフェーズを見せるため）
       const timeout = setTimeout(() => {
-        router.push("/result");
+        router.push(`/${locale}/result`);
       }, 1000);
       return () => clearTimeout(timeout);
     }
-  }, [status, result, router]);
+  }, [status, result, router, locale]);
 
   // リトライ
   const handleRetry = () => {
@@ -72,10 +74,10 @@ export default function AnalyzingPage() {
         const input = JSON.parse(stored) as UserInput;
         startAnalysis(input);
       } catch {
-        router.push("/input");
+        router.push(`/${locale}/input`);
       }
     } else {
-      router.push("/input");
+      router.push(`/${locale}/input`);
     }
   };
 
@@ -83,17 +85,14 @@ export default function AnalyzingPage() {
     <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-background">
       {/* ダーク背景 + グリッチ風エフェクト */}
       <div className="fixed inset-0 pointer-events-none">
-        {/* グラデーション背景 */}
         <div className="absolute inset-0 bg-gradient-to-b from-purple-950/30 via-background to-background" />
 
-        {/* スキャンライン */}
         <motion.div
           className="absolute left-0 right-0 h-0.5 bg-primary/20"
           animate={{ top: ["-5%", "105%"] }}
           transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
         />
 
-        {/* グリッチパーティクル（固定位置で配置） */}
         {PARTICLE_POSITIONS.map((pos, i) => (
           <motion.div
             key={i}
@@ -118,9 +117,9 @@ export default function AnalyzingPage() {
       {/* メインコンテンツ */}
       <div className="relative z-10">
         {status === "error" && error ? (
-          <ErrorMessage message={error} onRetry={handleRetry} />
+          <ErrorMessage message={error} onRetry={handleRetry} locale={locale} />
         ) : (
-          <LoadingPhase phase={phase} label={phaseLabel} />
+          <LoadingPhase phase={phase} label={phaseLabel} locale={locale} />
         )}
       </div>
 

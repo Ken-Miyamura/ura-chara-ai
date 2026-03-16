@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import GapMeter from "@/components/ui/GapMeter";
+import type { Locale } from "@/i18n/config";
+import { getDictionarySync } from "@/i18n/getDictionary";
 import type { GapLevel } from "@/types/shared";
 
 interface GapScoreDisplayProps {
@@ -10,16 +12,19 @@ interface GapScoreDisplayProps {
   levelLabel: string;
   aiComment: string;
   delay?: number;
+  locale?: Locale;
 }
 
-// ギャップスコア表示 (スコア + レベルラベル + AIコメント)
 export default function GapScoreDisplay({
   score,
   level,
   levelLabel,
   aiComment,
   delay = 0,
+  locale = "ja",
 }: GapScoreDisplayProps) {
+  const dict = getDictionarySync(locale);
+
   const levelColorMap: Record<GapLevel, string> = {
     honest: "text-green-400",
     slight: "text-blue-400",
@@ -35,7 +40,9 @@ export default function GapScoreDisplay({
       transition={{ duration: 0.6, delay }}
       className="text-center space-y-4"
     >
-      <h3 className="text-sm text-zinc-400 tracking-wider uppercase">ギャップスコア</h3>
+      <h3 className="text-sm text-zinc-400 tracking-wider uppercase">
+        {dict.result.gapScoreTitle}
+      </h3>
 
       <GapMeter score={score} delay={delay + 0.2} />
 

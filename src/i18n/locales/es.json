@@ -56,8 +56,28 @@
       "firstImpression": "Lo que la gente suele decir de ti, apodos, primeras impresiones, etc."
     },
     "chips": {
-      "hobbies": ["Anime", "Gaming", "Lectura", "Gym", "Cocina", "Viajes", "Fotograf\u00eda", "Fandom", "DIY", "Inversiones"],
-      "firstImpression": ["Responsable", "Despistado/a", "Alegre", "Cool", "Serio/a", "Peculiar", "El/La Gracioso/a", "Buen/a Oyente"]
+      "hobbies": [
+        "Anime",
+        "Gaming",
+        "Lectura",
+        "Gym",
+        "Cocina",
+        "Viajes",
+        "Fotograf\u00eda",
+        "Fandom",
+        "DIY",
+        "Inversiones"
+      ],
+      "firstImpression": [
+        "Responsable",
+        "Despistado/a",
+        "Alegre",
+        "Cool",
+        "Serio/a",
+        "Peculiar",
+        "El/La Gracioso/a",
+        "Buen/a Oyente"
+      ]
     },
     "buttons": {
       "next": "Siguiente →",
