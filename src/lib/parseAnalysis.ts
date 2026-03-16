@@ -102,6 +102,7 @@ export function parseAnalysisResponse(
   response: { content: ReadonlyArray<{ type: string; input?: unknown }> },
   id: string,
   analyzedAt: string,
+  locale: Locale = "ja",
 ): AnalysisResult {
   // tool_use ブロックを全て取得し、inputをマージ
   // Haikuは surface/hidden/gap/shareCard を別々の tool_use ブロックで返すことがある
@@ -127,7 +128,7 @@ export function parseAnalysisResponse(
   // 各セクションの解析・バリデーション
   const surface = parseSurfacePersona(data.surface);
   const hidden = parseHiddenPersona(data.hidden);
-  const gap = parseGapAnalysis(data.gap, surface, hidden);
+  const gap = parseGapAnalysis(data.gap, surface, hidden, locale);
   const shareCard = parseShareCard(data.shareCard, surface, hidden, gap);
 
   return {
@@ -205,6 +206,7 @@ function parseGapAnalysis(
   raw: unknown,
   surface: SurfacePersona,
   hidden: HiddenPersona,
+  locale: Locale = "ja",
 ): GapAnalysis {
   if (!raw || typeof raw !== "object") {
     throw new AnalysisParseError(
@@ -219,7 +221,7 @@ function parseGapAnalysis(
   const overallGapScore = validateNumber(data.overallGapScore, "gap.overallGapScore", 0, 100);
 
   // GapLevel をスコアから正しく算出（Claudeの出力よりスコアベースのマッピングを優先）
-  const { level: gapLevel, label: gapLevelLabel } = getGapLevel(overallGapScore);
+  const { level: gapLevel, label: gapLevelLabel } = getGapLevel(overallGapScore, locale);
 
   const traitComparisons = parseTraitComparisons(data.traitComparisons, surface, hidden);
 

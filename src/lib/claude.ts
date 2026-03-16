@@ -80,5 +80,5 @@ export async function analyzePersona(
   }
 
   // レスポンスを解析・バリデーション
-  return parseAnalysisResponse(response, id, analyzedAt);
+  return parseAnalysisResponse(response, id, analyzedAt, locale);
 }
