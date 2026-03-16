@@ -7,6 +7,9 @@
 /** サポートされるロケール */
 export type Locale = "ja" | "en" | "es";
 
+/** ロケールのバリデーション */
+export const SUPPORTED_LOCALES: readonly Locale[] = ["ja", "en", "es"] as const;
+
 // === User Input ===
 
 /** 入力カテゴリの識別子 */
@@ -180,6 +183,7 @@ export interface AnalyzeResponse {
 /** POST /api/share リクエスト */
 export interface ShareRequest {
   shareCard: ShareCardData;
+  locale?: Locale;
 }
 
 /** POST /api/share レスポンス */

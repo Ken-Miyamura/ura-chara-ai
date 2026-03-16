@@ -6,27 +6,55 @@ import type {
   GapAnalysis,
   GapLevel,
   HiddenPersona,
+  Locale,
   PersonaTrait,
   ShareCardData,
   SurfacePersona,
   TraitComparison,
 } from "@/types/shared";
 
-/** ギャップスコアからGapLevelへのマッピング */
+/** ギャップスコアからGapLevelへのマッピング（ロケール別ラベル付き） */
 const GAP_LEVEL_MAP: ReadonlyArray<{
   max: number;
   level: GapLevel;
-  label: string;
+  labels: Record<Locale, string>;
 }> = [
-  { max: 20, level: "honest", label: "素直タイプ" },
-  { max: 40, level: "slight", label: "ちょいギャップ" },
-  { max: 60, level: "dual", label: "二面性あり" },
-  { max: 80, level: "moe", label: "ギャップ萌えタイプ" },
-  { max: 100, level: "extreme", label: "完全に別人タイプ" },
+  {
+    max: 20,
+    level: "honest",
+    labels: { ja: "素直タイプ", en: "What You See Is What You Get", es: "Tipo Auténtico" },
+  },
+  {
+    max: 40,
+    level: "slight",
+    labels: { ja: "ちょいギャップ", en: "Slight Gap", es: "Pequeña Brecha" },
+  },
+  { max: 60, level: "dual", labels: { ja: "二面性あり", en: "Two-Faced", es: "Doble Cara" } },
+  {
+    max: 80,
+    level: "moe",
+    labels: { ja: "ギャップ萌えタイプ", en: "Charming Gap", es: "Brecha Encantadora" },
+  },
+  {
+    max: 100,
+    level: "extreme",
+    labels: {
+      ja: "完全に別人タイプ",
+      en: "Totally Different Person",
+      es: "Persona Totalmente Diferente",
+    },
+  },
 ];
 
-/** 5つの必須特性軸 */
-const REQUIRED_TRAIT_LABELS = ["社交性", "行動力", "感受性", "論理性", "自己主張"] as const;
+/** 5つの必須特性軸（ロケール別） */
+const REQUIRED_TRAIT_LABELS_BY_LOCALE: Record<Locale, readonly string[]> = {
+  ja: ["社交性", "行動力", "感受性", "論理性", "自己主張"],
+  en: ["Sociability", "Drive", "Sensitivity", "Logic", "Assertiveness"],
+  es: ["Sociabilidad", "Iniciativa", "Sensibilidad", "Lógica", "Asertividad"],
+} as const;
+
+/** 後方互換性のためのデフォルト（日本語） */
+const REQUIRED_TRAIT_LABELS = REQUIRED_TRAIT_LABELS_BY_LOCALE.ja;
 
 /** 解析エラー用のカスタムエラークラス */
 export class AnalysisParseError extends Error {
@@ -43,8 +71,13 @@ export class AnalysisParseError extends Error {
 /**
  * ギャップスコアに対応するGapLevelとラベルを返す。
  * スコアは0-100の範囲にクランプされる。
+ * @param score - ギャップスコア (0-100)
+ * @param locale - ラベルのロケール（デフォルト: "ja"）
  */
-export function getGapLevel(score: number): {
+export function getGapLevel(
+  score: number,
+  locale: Locale = "ja",
+): {
   level: GapLevel;
   label: string;
 } {
@@ -52,8 +85,8 @@ export function getGapLevel(score: number): {
   const entry = GAP_LEVEL_MAP.find((e) => clampedScore <= e.max);
   // findは必ずヒットする（max: 100があるため）が、型安全のためフォールバック
   return entry
-    ? { level: entry.level, label: entry.label }
-    : { level: "extreme", label: "完全に別人タイプ" };
+    ? { level: entry.level, label: entry.labels[locale] }
+    : { level: "extreme", label: GAP_LEVEL_MAP[4].labels[locale] };
 }
 
 /**
@@ -245,20 +278,41 @@ function parseTraitComparisons(
   return comparisons.slice(0, 5);
 }
 
+/** 特性名からアイコンへのマッピング（全ロケール対応） */
+const TRAIT_ICON_MAP: Record<string, string> = {
+  // Japanese
+  社交性: "🎭",
+  行動力: "⚡",
+  感受性: "💖",
+  論理性: "🧠",
+  自己主張: "💬",
+  // English
+  Sociability: "🎭",
+  Drive: "⚡",
+  Sensitivity: "💖",
+  Logic: "🧠",
+  Assertiveness: "💬",
+  // Spanish
+  Sociabilidad: "🎭",
+  Iniciativa: "⚡",
+  Sensibilidad: "💖",
+  Lógica: "🧠",
+  Asertividad: "💬",
+};
+
 /** ペルソナのscoredTraitsから特性比較を生成するフォールバック */
 function buildTraitComparisonsFromPersonas(
   surface: SurfacePersona,
   hidden: HiddenPersona,
 ): TraitComparison[] {
-  const defaultIcons: Record<string, string> = {
-    社交性: "🎭",
-    行動力: "⚡",
-    感受性: "💖",
-    論理性: "🧠",
-    自己主張: "💬",
-  };
+  // scoredTraitsから実際のラベルを使用（ロケールに依存しない）
+  // scoredTraitsが空の場合のフォールバックとして日本語ラベルを使用
+  const traitLabels =
+    surface.scoredTraits.length > 0
+      ? surface.scoredTraits.map((t) => t.label)
+      : [...REQUIRED_TRAIT_LABELS];
 
-  return REQUIRED_TRAIT_LABELS.map((label) => {
+  return traitLabels.slice(0, 5).map((label) => {
     const surfaceTrait = surface.scoredTraits.find((t) => t.label === label);
     const hiddenTrait = hidden.scoredTraits.find((t) => t.label === label);
     const sScore = surfaceTrait?.score ?? 50;
@@ -266,7 +320,7 @@ function buildTraitComparisonsFromPersonas(
 
     return {
       category: label,
-      icon: defaultIcons[label] || "📊",
+      icon: TRAIT_ICON_MAP[label] || "📊",
       surfaceLabel: surfaceTrait?.description ?? "",
       hiddenLabel: hiddenTrait?.description ?? "",
       surfaceScore: sScore,
@@ -328,7 +382,7 @@ function buildShareCardFallback(
   };
 }
 
-/** スコア付き特性の解析 */
+/** スコア付き特性の解析（ロケールに依存しない検証） */
 function parseScoredTraits(raw: unknown, fieldPath: string): PersonaTrait[] {
   if (!Array.isArray(raw)) {
     throw new AnalysisParseError(`${fieldPath}は配列である必要があります。`, fieldPath, raw);
@@ -347,16 +401,20 @@ function parseScoredTraits(raw: unknown, fieldPath: string): PersonaTrait[] {
     });
   }
 
-  // 5つの必須特性が全て含まれているか検証
-  const existingLabels = new Set(traits.map((t) => t.label));
-  for (const required of REQUIRED_TRAIT_LABELS) {
-    if (!existingLabels.has(required)) {
-      throw new AnalysisParseError(
-        `${fieldPath}に必須特性「${required}」が含まれていません。`,
-        fieldPath,
-        raw,
-      );
-    }
+  // 5つの特性が含まれているか検証（ロケールに依存しない — どのロケールのラベルでもOK）
+  // 全ロケールの有効なラベルセットを作成
+  const allValidLabels = new Set(Object.values(REQUIRED_TRAIT_LABELS_BY_LOCALE).flat());
+
+  const existingLabels = traits.map((t) => t.label);
+  const validTraitCount = existingLabels.filter((l) => allValidLabels.has(l)).length;
+
+  if (validTraitCount < 5) {
+    // どのロケールで返ってきたか特定して、不足分を報告
+    throw new AnalysisParseError(
+      `${fieldPath}には5つの特性軸が必要ですが、${validTraitCount}個しか有効な特性がありません。`,
+      fieldPath,
+      raw,
+    );
   }
 
   return traits;
