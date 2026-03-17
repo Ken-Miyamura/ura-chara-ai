@@ -7,9 +7,10 @@ import { getDictionarySync } from "@/i18n/getDictionary";
 
 interface HeaderProps {
   locale?: Locale;
+  showLanguageSwitcher?: boolean;
 }
 
-export default function Header({ locale = "ja" }: HeaderProps) {
+export default function Header({ locale = "ja", showLanguageSwitcher = false }: HeaderProps) {
   const dict = getDictionarySync(locale);
 
   return (
@@ -20,7 +21,7 @@ export default function Header({ locale = "ja" }: HeaderProps) {
             {dict.common.appName}
           </span>
         </Link>
-        <LanguageSwitcher locale={locale} />
+        {showLanguageSwitcher && <LanguageSwitcher locale={locale} />}
       </div>
     </header>
   );

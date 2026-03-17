@@ -38,7 +38,7 @@ export default function LandingPage() {
         />
       </div>
 
-      <Header locale={locale} />
+      <Header locale={locale} showLanguageSwitcher />
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 pt-20 pb-8 relative z-10">
         {/* ヒーローセクション */}
