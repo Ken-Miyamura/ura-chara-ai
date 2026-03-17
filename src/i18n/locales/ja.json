@@ -28,28 +28,28 @@
   },
   "input": {
     "stepLabels": {
-      "snsContent": "📱 SNS投稿",
+      "snsContent": "📱 SNS投稿・発信スタイル",
       "hobbies": "🎯 趣味・興味",
       "schedule": "🕐 1日のスケジュール",
       "musicTaste": "🎵 音楽の好み",
       "firstImpression": "👤 第一印象"
     },
     "prompts": {
-      "snsContent": "最近のSNS投稿をコピペしてください。Twitter、Instagram、なんでもOK！",
+      "snsContent": "最近のSNS投稿をコピペしてください。SNSをやっていない場合は、その理由を教えてください！",
       "hobbies": "ハマっていること、好きなこと、教えてください！",
       "schedule": "典型的な1日の過ごし方を教えてください。",
       "musicTaste": "よく聴くアーティストや曲を教えてください！",
       "firstImpression": "周りの人にどう思われてると感じますか？"
     },
     "placeholders": {
-      "snsContent": "例：今日もカフェで仕事なう☕ / 週末は友達と渋谷で飲み🍻 / この映画マジで泣いた😭",
+      "snsContent": "例：今日もカフェで仕事なう☕ / 週末は友達と渋谷で飲み🍻\n\nSNSやってない場合 → 例：人に見られるのが苦手で…/ 時間の無駄だと思ってやめた / 昔はやってたけど疲れた",
       "hobbies": "例：最近はソロキャンプにハマってる。あとNetflixで韓ドラ見まくり。週末は筋トレ。",
       "schedule": "例：7時起床→満員電車→9-18時仕事→ジム→帰宅→YouTube見ながら寝落ち",
       "musicTaste": "例：YOASOBI、King Gnu、藤井風。深夜はCity Popとか聴いてる。Spotifyのプレイリストはほぼアニソン。",
       "firstImpression": "例：よく「しっかりしてるね」って言われるけど、実は毎朝ギリギリで家出てる。"
     },
     "helpText": {
-      "snsContent": "5〜10投稿分くらいがベスト。多いほど精度UP！",
+      "snsContent": "SNS投稿は5〜10投稿分がベスト。やっていない人は理由を書くだけでもOK！",
       "hobbies": "人に言う趣味も、こっそりな趣味も、全部書いてOK！",
       "schedule": "リアルな過ごし方でOK。「理想の1日」じゃなくて「実際の1日」を！",
       "musicTaste": "ジャンル、アーティスト名、プレイリストの雰囲気、なんでもOK",

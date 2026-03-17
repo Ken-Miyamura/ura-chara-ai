@@ -28,28 +28,28 @@
   },
   "input": {
     "stepLabels": {
-      "snsContent": "📱 SNS Posts",
+      "snsContent": "📱 SNS Posts / Online Presence",
       "hobbies": "🎯 Hobbies & Interests",
       "schedule": "🕐 Daily Schedule",
       "musicTaste": "🎵 Music Taste",
       "firstImpression": "👤 First Impressions"
     },
     "prompts": {
-      "snsContent": "Copy-paste your recent SNS posts. Twitter, Instagram, anything goes!",
+      "snsContent": "Copy-paste your recent SNS posts. Don't use SNS? Tell us why!",
       "hobbies": "Tell us what you're into, what you love!",
       "schedule": "Walk us through your typical day.",
       "musicTaste": "What artists or songs do you listen to?",
       "firstImpression": "How do you think people see you?"
     },
     "placeholders": {
-      "snsContent": "e.g.: Working from a cafe today ☕ / Weekend drinks with friends 🍻 / This movie made me cry 😭",
+      "snsContent": "e.g.: Working from a cafe today ☕ / Weekend drinks with friends 🍻\n\nDon't use SNS? → e.g.: I find it draining / I value my privacy / I used to post but got tired of it",
       "hobbies": "e.g.: Into solo camping lately. Binge-watching K-dramas on Netflix. Weekend gym sessions.",
       "schedule": "e.g.: Wake up 7am → packed train → work 9-6 → gym → home → fall asleep watching YouTube",
       "musicTaste": "e.g.: Taylor Swift, The Weeknd, Doja Cat. Late night lo-fi playlists. Secretly love anime OSTs.",
       "firstImpression": "e.g.: People say I'm \"put together\" but I'm actually scrambling every morning."
     },
     "helpText": {
-      "snsContent": "5-10 posts is ideal. More posts = better accuracy!",
+      "snsContent": "5-10 posts is ideal. Don't use SNS? Just writing your reason is enough!",
       "hobbies": "Public hobbies AND secret guilty pleasures — write them all!",
       "schedule": "Your REAL day, not your ideal one!",
       "musicTaste": "Genres, artists, playlist vibes — anything goes!",
