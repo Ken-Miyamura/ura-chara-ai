@@ -36,6 +36,7 @@ const PROMPT_TEXTS: Record<Locale, AnalysisPromptTexts> = {
 
 分析のポイント：
 - SNS投稿のトーン・頻度・内容から表の顔を読み取る
+- SNSをやっていない場合、その理由自体を性格シグナルとして重視する（「やらない選択」は強い性格の手がかり）
 - 趣味の内容（ソロ vs グループ、アクティブ vs インドア）から行動パターンを推測
 - スケジュールがあれば、実際の時間の使い方と表の顔のギャップを見つける
 - 音楽の好みがあれば、感情面・内面の手がかりとして活用
@@ -62,6 +63,7 @@ Based on the data above, execute the 5 internal steps (Data Analysis → Surface
 
 Analysis guidelines:
 - Read the surface persona from the tone, frequency, and content of SNS posts
+- If the user doesn't use SNS, treat their reason as a strong personality signal (the choice not to post is itself revealing)
 - Infer behavioral patterns from hobbies (solo vs. group, active vs. indoor)
 - If schedule is provided, find gaps between actual time use and surface persona
 - If music taste is provided, use it as a clue to emotions and inner self
@@ -88,6 +90,7 @@ Basándote en los datos anteriores, ejecuta los 5 pasos internos (Análisis de D
 
 Pautas de análisis:
 - Lee la persona de superficie del tono, frecuencia y contenido de las publicaciones en redes
+- Si el usuario no usa redes sociales, trata su razón como una señal fuerte de personalidad (la elección de no publicar es reveladora en sí misma)
 - Infiere patrones de comportamiento de los pasatiempos (individual vs. grupal, activo vs. hogareño)
 - Si se proporciona la rutina, encuentra brechas entre el uso real del tiempo y la persona de superficie
 - Si se proporcionan gustos musicales, úsalos como pista de emociones y el yo interior

@@ -105,10 +105,12 @@ export const VALIDATION_RULES: Record<InputCategory, FieldValidationRule> = {
 export const INPUT_FIELD_CONFIGS: readonly InputFieldConfig[] = [
   {
     id: "snsContent",
-    label: "📱 SNS投稿",
-    prompt: "最近のSNS投稿をコピペしてください。Twitter、Instagram、なんでもOK！",
-    placeholder: "例：今日もカフェで仕事なう☕ / 週末は友達と渋谷で飲み🍻 / この映画マジで泣いた😭",
-    helpText: "5〜10投稿分くらいがベスト。多いほど精度UP！",
+    label: "📱 SNS投稿・発信スタイル",
+    prompt:
+      "最近のSNS投稿をコピペしてください。SNSをやっていない場合は、その理由を教えてください！",
+    placeholder:
+      "例：今日もカフェで仕事なう☕ / 週末は友達と渋谷で飲み🍻\n\nSNSやってない場合 → 例：人に見られるのが苦手で…/ 時間の無駄だと思ってやめた / 昔はやってたけど疲れた",
+    helpText: "SNS投稿は5〜10投稿分がベスト。やっていない人は理由を書くだけでもOK！",
     required: true,
     minChars: 50,
     maxChars: 2000,

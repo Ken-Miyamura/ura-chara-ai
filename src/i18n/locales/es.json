@@ -28,28 +28,28 @@
   },
   "input": {
     "stepLabels": {
-      "snsContent": "📱 Publicaciones en Redes",
+      "snsContent": "📱 Redes Sociales / Presencia Online",
       "hobbies": "🎯 Hobbies e Intereses",
       "schedule": "🕐 Rutina Diaria",
       "musicTaste": "🎵 Gustos Musicales",
       "firstImpression": "👤 Primera Impresi\u00f3n"
     },
     "prompts": {
-      "snsContent": "\u00a1Copia y pega tus publicaciones recientes! Twitter, Instagram, \u00a1lo que sea!",
+      "snsContent": "\u00a1Copia y pega tus publicaciones recientes! \u00bfNo usas redes? \u00a1Cu\u00e9ntanos por qu\u00e9!",
       "hobbies": "\u00a1Cu\u00e9ntanos qu\u00e9 te apasiona, qu\u00e9 te encanta!",
       "schedule": "Cu\u00e9ntanos c\u00f3mo es tu d\u00eda t\u00edpico.",
       "musicTaste": "\u00bfQu\u00e9 artistas o canciones escuchas?",
       "firstImpression": "\u00bfC\u00f3mo crees que te ven los dem\u00e1s?"
     },
     "placeholders": {
-      "snsContent": "ej: Trabajando desde un caf\u00e9 hoy ☕ / Sali con amigos el finde 🍻 / Esta peli me hizo llorar 😭",
+      "snsContent": "ej: Trabajando desde un caf\u00e9 hoy ☕ / Sali con amigos el finde 🍻\n\n\u00bfNo usas redes? → ej: Me agota / Valoro mi privacidad / Antes publicaba pero me cans\u00e9",
       "hobbies": "ej: \u00daltimamente me enganch\u00e9 con el camping solo. Maratones de K-dramas en Netflix. Gym los fines.",
       "schedule": "ej: Despertar 7am → metro lleno → trabajo 9-6 → gym → casa → dormirme viendo YouTube",
       "musicTaste": "ej: Bad Bunny, Rosalia, Dua Lipa. De noche playlists lo-fi. En secreto amo los OST de anime.",
       "firstImpression": "ej: La gente dice que soy \"responsable\" pero en realidad salgo corriendo cada ma\u00f1ana."
     },
     "helpText": {
-      "snsContent": "\u00a15-10 publicaciones es ideal. \u00a1M\u00e1s = mejor precisi\u00f3n!",
+      "snsContent": "\u00a15-10 publicaciones es ideal. \u00bfNo usas redes? \u00a1Solo escribe tu raz\u00f3n!",
       "hobbies": "\u00a1Hobbies p\u00fablicos Y placeres secretos — esc\u00edbe todo!",
       "schedule": "\u00a1Tu d\u00eda REAL, no el ideal!",
       "musicTaste": "G\u00e9neros, artistas, vibes de playlist — \u00a1lo que sea!",
