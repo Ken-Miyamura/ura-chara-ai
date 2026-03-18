@@ -4,12 +4,14 @@
 
 | Layer | Technology | Version | Rationale |
 |-------|-----------|---------|-----------|
-| Framework | Next.js 14 (App Router) | 16.x (installed) | SSR, API routes, streaming support |
+| Framework | Next.js (App Router) | 16.x | SSR, API routes, streaming support |
 | Language | TypeScript (strict mode) | 5.x | Type safety, no `any` allowed |
 | Styling | Tailwind CSS | 4.x | Utility-first, rapid UI development |
 | Animation | Framer Motion | 12.x | Reveal animations, page transitions |
-| AI | Anthropic Claude API | SDK 0.78+ | claude-sonnet-4-6 for analysis, claude-haiku-4-5-20251001 for lightweight tasks |
-| Screenshot | html2canvas | latest | Client-side share card image generation |
+| AI | Anthropic Claude API | SDK 0.78+ | claude-sonnet-4-6 for analysis |
+| Screenshot | html-to-image | latest | Client-side share card image generation |
+| Lint / Format | Biome | 2.x | Fast linting and formatting |
+| i18n | Custom (locale routing + JSON) | — | ja/en/es multi-language support |
 | State | Client-side only (React state) | — | No DB in MVP |
 | Deployment | Vercel | — | Native Next.js support, edge functions |
 
@@ -30,11 +32,12 @@ Main analysis endpoint. Accepts user input, runs the AI prompt chain, and stream
 **Request Body:**
 ```typescript
 {
-  snsContent: string;       // SNS投稿のコピペ — REQUIRED, 50-2000 chars
+  snsContent: string;       // SNS投稿 or やらない理由 — REQUIRED, 50-2000 chars
   hobbies: string;          // 趣味・好きなこと — REQUIRED, 20-1000 chars
   schedule: string;         // 1日のスケジュール — OPTIONAL, 0-1000 chars
   musicTaste: string;       // よく聴く音楽 — OPTIONAL, 0-500 chars
   firstImpression: string;  // 人からよく言われる第一印象 — OPTIONAL, 0-500 chars
+  locale?: "ja" | "en" | "es";  // 分析言語（デフォルト: "ja"）
 }
 ```
 
@@ -89,7 +92,7 @@ Generates share text for Twitter/X. MVP scope: returns pre-filled tweet text onl
 }
 ```
 
-> MVP note: Share card image generation is handled entirely client-side using `html2canvas`. No server-side image generation. No persistent share URLs (no database). Future versions will use Supabase for persistent share URLs with OGP support.
+> MVP note: Share card image generation is handled entirely client-side using `html-to-image`. No server-side image generation. No persistent share URLs (no database). Future versions will use Supabase for persistent share URLs with OGP support.
 
 ---
 
@@ -332,7 +335,7 @@ Output the result as valid JSON matching the AnalysisResult schema.
 
 1. **Temperature**: Set to `0.8` for creative but coherent personality descriptions.
 2. **Max tokens**: `4096` - enough for the full structured response.
-3. **Model selection**: Use `claude-sonnet-4-6` for the main analysis (better nuance). Reserve `claude-haiku-4-5-20251001` for potential future lightweight endpoints (e.g., re-generating just the catchphrase).
+3. **Model selection**: Use `claude-sonnet-4-6` for the main analysis (better nuance).
 4. **JSON mode**: Use Claude's structured output / tool-use pattern to guarantee valid JSON. Define the `AnalysisResult` schema as a tool parameter.
 5. **Streaming**: Enable streaming to parse the response progressively. Emit phase-change events to the client based on detecting each section being generated.
 6. **Tone alignment**: System prompt incorporates tone guidelines from product-design.md Section 6 — playful, slightly provocative, empathetic, pop-culture aware, casual.
@@ -364,16 +367,19 @@ Since we use a single API call, we simulate phase progression on the client with
 ```
 src/
 ├── app/
-│   ├── layout.tsx                  # Root layout with fonts, metadata, global providers
-│   ├── page.tsx                    # Landing page (hero + CTA)
-│   ├── input/
-│   │   └── page.tsx                # 5-step input wizard page
-│   ├── analyzing/
-│   │   └── page.tsx                # Analysis-in-progress page (loading animation)
-│   ├── result/
-│   │   └── page.tsx                # Result display page with reveal sequence
-│   ├── share/
-│   │   └── page.tsx                # Share card view (OGP target)
+│   ├── layout.tsx                  # Root layout with fonts, metadata
+│   ├── globals.css                 # Global styles
+│   ├── [locale]/                   # i18n locale routing
+│   │   ├── layout.tsx              # Locale layout with Header/Footer
+│   │   ├── page.tsx                # Landing page (hero + CTA)
+│   │   ├── input/
+│   │   │   └── page.tsx            # 5-step input wizard page
+│   │   ├── analyzing/
+│   │   │   └── page.tsx            # Analysis-in-progress page (loading animation)
+│   │   ├── result/
+│   │   │   └── page.tsx            # Result display page with reveal sequence
+│   │   └── share/
+│   │       └── page.tsx            # Share card view
 │   └── api/
 │       ├── analyze/
 │       │   └── route.ts            # POST /api/analyze - main analysis endpoint (SSE)
@@ -382,61 +388,56 @@ src/
 │
 ├── components/
 │   ├── ui/
-│   │   ├── Button.tsx              # Reusable button with variants (pulse animation for CTA)
-│   │   ├── Card.tsx                # Card container component
+│   │   ├── CharCounter.tsx         # Character count display for input fields
+│   │   ├── ErrorMessage.tsx        # In-character error message display
+│   │   ├── GapMeter.tsx            # Large gap score number with count-up animation
+│   │   ├── LanguageSwitcher.tsx    # Locale selector (ja/en/es)
+│   │   ├── LocaleHtmlLang.tsx      # Sets <html lang> based on locale
 │   │   ├── ProgressBar.tsx         # Step progress indicator (1/5, 2/5, etc.)
-│   │   ├── TagChips.tsx            # Tappable tag chip selector (for hobbies, first impression)
-│   │   ├── TraitBar.tsx            # Horizontal bar for gap score visualization
-│   │   └── GapMeter.tsx            # Large gap score number display with count-up animation
+│   │   ├── TagChips.tsx            # Tappable tag chip selector
+│   │   └── TraitBar.tsx            # Horizontal bar for score visualization
 │   ├── input/
-│   │   ├── InputForm.tsx           # Main form orchestrator (stepped wizard)
-│   │   ├── InputField.tsx          # Single textarea input with char count + help text
-│   │   ├── InputStepper.tsx        # Step indicator and navigation (1/5 progress)
-│   │   └── WhyTooltip.tsx          # "なぜ必要？" tooltip component
+│   │   └── InputStep.tsx           # Single input step with textarea + validation
 │   ├── analysis/
-│   │   ├── AnalysisLoader.tsx      # Full-screen dark loading with glitch aesthetic
-│   │   ├── PhaseIndicator.tsx      # Shows current analysis phase with label
-│   │   └── TeaserMessage.tsx       # Rotating teaser messages during loading
+│   │   └── LoadingPhase.tsx        # Full-screen dark loading with phase animations
+│   ├── layout/
+│   │   ├── Header.tsx              # App header
+│   │   └── Footer.tsx              # App footer
 │   ├── result/
-│   │   ├── ResultView.tsx          # Full result layout with reveal sequence orchestration
 │   │   ├── PersonaCard.tsx         # Displays one persona (surface=bright / hidden=dark+neon)
-│   │   ├── TraitComparison.tsx     # "surface → hidden" text comparison with icon
-│   │   ├── GapScoreDisplay.tsx     # Gap score number + level label + AI comment
-│   │   └── InsightSection.tsx      # Surprising findings section
+│   │   ├── TraitComparisonList.tsx  # Side-by-side trait comparisons with bars
+│   │   └── GapScoreDisplay.tsx     # Gap score number + level label + AI comment
 │   └── share/
-│       ├── ShareCard.tsx           # Visual share card (split design: bright left / dark right)
-│       ├── ShareButtons.tsx        # Twitter/X share button + screenshot download (MVP scope)
-│       └── CatchphraseDisplay.tsx  # Large animated catchphrase text
+│       └── ShareButton.tsx         # Twitter/X share + screenshot download
+│
+├── i18n/
+│   └── locales/
+│       ├── ja.json                 # Japanese translations
+│       ├── en.json                 # English translations
+│       └── es.json                 # Spanish translations
 │
 ├── lib/
-│   ├── claude.ts                   # Claude API client wrapper
-│   ├── prompts.ts                  # Prompt builder (system + user prompts)
+│   ├── claude.ts                   # Claude API client wrapper (with timeout)
 │   ├── parseAnalysis.ts            # Parse and validate Claude JSON response
 │   ├── streamHandler.ts            # SSE stream creation and event formatting
-│   ├── validation.ts               # Input validation and sanitization (per-field rules)
-│   └── constants.ts                # App-wide constants (phase labels, gap levels, tag chips)
+│   ├── validation.ts               # Input validation and sanitization
+│   ├── constants.ts                # App-wide constants (gap levels, field configs, API config)
+│   └── __fixtures__/               # Test fixture data
+│       └── sampleInput.ts          # Sample input/output for testing
 │
 ├── types/
 │   └── shared.ts                   # All TypeScript interfaces (source of truth)
 │
 ├── prompts/
-│   ├── system.ts                   # System prompt template (with tone guidelines)
-│   └── analysis.ts                 # User prompt template with variable injection
+│   ├── system.ts                   # System prompt (ja/en/es versions)
+│   └── analysis.ts                 # User prompt template + tool schema
 │
-└── hooks/
-    ├── useAnalysis.ts              # Hook: triggers analysis, manages stream + phase state
-    └── useShareCard.ts             # Hook: generates screenshot via html2canvas, Twitter share
+├── hooks/
+│   ├── useAnalysis.ts              # Hook: triggers analysis, manages SSE stream
+│   └── useShareCard.ts             # Hook: generates screenshot via html-to-image
+│
+└── middleware.ts                   # Locale detection and routing middleware
 ```
-
-### File Count Summary
-- **Pages**: 5 (landing, input, analyzing, result, share)
-- **API Routes**: 2 (analyze, share)
-- **Components**: 18
-- **Lib utilities**: 6
-- **Types**: 1 (single source of truth)
-- **Prompts**: 2
-- **Hooks**: 2
-- **Total planned files**: ~36
 
 ---
 
@@ -489,7 +490,7 @@ Layer 2: API Route Validation (server-side)
   → Reject payloads exceeding per-field max chars
 
 Layer 3: Claude API Error Handling
-  → Timeout: 30 second limit, show retry option
+  → Timeout: 60 second limit, show retry option
   → Rate limit (429): Show "混み合っています" message with countdown
   → Invalid response: Retry once, then show error with retry button
   → Network error: Show offline message
@@ -556,6 +557,6 @@ These are out of scope for MVP but inform architectural decisions:
 3. **Spotify API Integration**: Direct music data analysis instead of text-based music taste input.
 4. **Additional Share Platforms**: LINE share, Instagram Stories (vertical 1080x1920 card format), copy link with OGP preview.
 5. **Analytics**: Track gap score distribution, most common persona types, share rates, completion rates. Anonymous aggregate only.
-6. **Multi-language**: Architecture supports i18n but MVP is Japanese-only.
+6. **Additional Languages**: Current i18n supports ja/en/es. Architecture supports adding more locales easily.
 7. **History / Comparison**: Allow users to save and compare multiple analyses, or compare with friends (requires auth + DB).
 8. **Backend Share URLs**: Persistent share URLs with unique IDs, OGP meta tags for link previews.
