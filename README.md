@@ -4,6 +4,8 @@
 
 SNS投稿・趣味・スケジュール・音楽の好み・第一印象を入力すると、AIが「表の顔」と「裏の顔」のギャップを分析するエンタメ性格診断アプリです。
 
+![UraChara AI Landing Page](docs/screenshot-landing.png)
+
 ## Features
 
 - 5つの入力カテゴリから表の顔と裏の顔を AI が分析

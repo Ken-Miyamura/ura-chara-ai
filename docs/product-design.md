@@ -95,7 +95,7 @@ Note: These steps are time-based animations (not tied to actual API progress). T
 - Use Framer Motion for all transitions
 - If API takes longer than 10s, loop steps 2-5 with variation messages
 - Never show a generic spinner
-- API timeout at 30 seconds; show retry option if exceeded
+- API timeout at 60 seconds; show retry option if exceeded
 
 ### 2.4 Result Phase (結果表示)
 
@@ -118,7 +118,7 @@ Result structure is detailed in Section 4.
 **Goal:** Maximize viral distribution.
 
 **Share options:**
-- **Screenshot card:** Pre-designed OGP-style image card with persona names + gap score (generated client-side using html2canvas or similar)
+- **Screenshot card:** Pre-designed OGP-style image card with persona names + gap score (generated client-side using html-to-image)
 - **Twitter/X share:** Pre-filled tweet text — "私の裏キャラは「[裏キャラ名]」でした！ギャップスコア: [XX]点 #裏キャラAI #裏キャラ診断"
 - **Instagram Stories:** Vertical card format optimized for Stories sharing
 - **LINE share:** URL with OGP preview
@@ -130,21 +130,20 @@ Result structure is detailed in Section 4.
 
 ## 3. Data Input Format (データ入力仕様)
 
-### Step 1: SNS投稿 (SNS Posts) — REQUIRED
+### Step 1: SNS投稿・発信スタイル (SNS Posts / Online Presence) — REQUIRED
 
-**Prompt:** "最近のSNS投稿をコピペしてください。Twitter、Instagram、なんでもOK！"
-(Copy-paste your recent SNS posts. Twitter, Instagram, anything goes!)
+**Prompt:** "最近のSNS投稿をコピペしてください。SNSをやっていない場合は、その理由を教えてください！"
 
 | Property | Value |
 |---|---|
 | UI Element | `<textarea>` with large tap target |
-| Placeholder | "例：今日もカフェで仕事なう☕ / 週末は友達と渋谷で飲み🍻 / この映画マジで泣いた😭" |
+| Placeholder | "例：今日もカフェで仕事なう☕ / 週末は友達と渋谷で飲み🍻\n\nSNSやってない場合 → 例：人に見られるのが苦手で…/ 時間の無駄だと思ってやめた / 昔はやってたけど疲れた" |
 | Minimum | 50 characters |
 | Maximum | 2000 characters |
 | Required | Yes |
-| Help text | "5〜10投稿分くらいがベスト。多いほど精度UP！" (5-10 posts is ideal. More = better accuracy!) |
+| Help text | "SNS投稿は5〜10投稿分がベスト。やっていない人は理由を書くだけでもOK！" |
 
-**Why this matters:** SNS posts reveal the curated, public-facing persona. They're the raw material for 表の顔.
+**Why this matters:** SNS posts reveal the curated, public-facing persona. They're the raw material for 表の顔. For users who don't use SNS, their reason for not posting is itself a strong personality signal — the choice not to curate a public image reveals sociability, drive, and logic traits.
 
 ### Step 2: 趣味・興味 (Hobbies & Interests) — REQUIRED
 
@@ -216,7 +215,7 @@ Result structure is detailed in Section 4.
 
 | Step | Category | Required | Min chars | Max chars |
 |---|---|---|---|---|
-| 1 | SNS投稿 | Yes | 50 | 2000 |
+| 1 | SNS投稿・発信スタイル | Yes | 50 | 2000 |
 | 2 | 趣味・興味 | Yes | 20 | 1000 |
 | 3 | 1日のスケジュール | No | — | 1000 |
 | 4 | 音楽の好み | No | — | 500 |
@@ -649,14 +648,13 @@ UraChara AI speaks like a **charismatic, slightly mischievous friend** who knows
 - [x] Twitter share button with pre-filled text
 - [x] Screenshot card generation (client-side)
 - [x] Mobile-first responsive design
-- [x] Japanese language only
+- [x] Multi-language support (Japanese, English, Spanish)
 
 ### Out of Scope (Future)
 
 - [ ] SNS API integration (Instagram, Twitter OAuth)
 - [ ] User accounts / login
 - [ ] Database / result persistence
-- [ ] Multi-language support
 - [ ] Comparison with friends
 - [ ] Historical tracking ("your ura-chara over time")
 - [ ] LINE / Instagram share integration
