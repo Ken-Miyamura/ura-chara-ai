@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://ura-chara-ai.vercel.app"),
+};
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
